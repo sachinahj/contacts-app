@@ -19,10 +19,8 @@ class SplashController: UIViewController {
     }
     
     @IBAction func jumpIn(_ sender: UIButton) {
-        print("jump in with", usernameField.text ?? "")
-        
-        if let checkUsername = usernameField.text {
-            username = checkUsername
+        if usernameField.text != "" {
+            username = usernameField.text?.trimmingCharacters(in: .whitespaces)
             view.endEditing(true)
             performSegue(withIdentifier: "goToMap", sender: self)
         }
