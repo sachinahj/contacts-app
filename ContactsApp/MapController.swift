@@ -12,17 +12,16 @@ import GoogleMaps
 
 class MapController: UIViewController, GMSMapViewDelegate {
     
-    var locationManager = CLLocationManager()
-    var currentLocation: CLLocation?
+    var username: String?
     
+    var mapView: GMSMapView!
+    var myLocationFound: Bool!
     var me: GMSCircle?
     var meRange: GMSCircle?
-
-    var mapView: GMSMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        print("MapController", username)
         
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 1.0)
         mapView = GMSMapView.map(withFrame: view.bounds, camera: camera)
@@ -36,6 +35,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
         
         // https://stackoverflow.com/questions/40986708/google-maps-start-at-user-location
         mapView.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
+        myLocationFound = false
         
         view = mapView
     }
@@ -63,11 +63,17 @@ class MapController: UIViewController, GMSMapViewDelegate {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let update = change, let myLocation = update[NSKeyValueChangeKey.newKey] as? CLLocation else { return }
         mapView.camera = GMSCameraPosition.camera(withTarget: myLocation.coordinate, zoom: 15.0)
-        self.mapView.removeObserver(self, forKeyPath: "myLocation")
+        if (myLocationFound == false) {
+            myLocationFound = true
+            mapView.removeObserver(self, forKeyPath: "myLocation")
+        }
     }
     
     deinit {
-        mapView.removeObserver(self, forKeyPath: "myLocation")
+        if (myLocationFound == false) {
+            myLocationFound = true
+            mapView.removeObserver(self, forKeyPath: "myLocation")
+        }
     }
     
 }

@@ -1,30 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ex1-YD-sg6">
+    <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Intro!-->
+        <scene sceneID="ezv-4e-Ll2">
+            <objects>
+                <viewController id="8fP-OV-xQs" customClass="SplashController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="UBL-Ws-H9Z"/>
+                        <viewControllerLayoutGuide type="bottom" id="NNa-Xk-gP1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eHF-zE-nV3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Coe-X5-wea">
+                                <rect key="frame" x="70" y="303" width="274" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R7c-dv-lbh">
+                                <rect key="frame" x="120" y="403" width="174" height="30"/>
+                                <color key="backgroundColor" red="0.11937905940256055" green="0.88874128304243527" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <state key="normal" title="Jump In!"/>
+                                <connections>
+                                    <action selector="jumpIn:" destination="8fP-OV-xQs" eventType="touchUpInside" id="JGe-RN-nD5"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="R7c-dv-lbh" firstAttribute="leading" secondItem="eHF-zE-nV3" secondAttribute="leadingMargin" constant="100" id="1Zc-30-Yup"/>
+                            <constraint firstItem="R7c-dv-lbh" firstAttribute="centerX" secondItem="eHF-zE-nV3" secondAttribute="centerX" id="AGb-TO-JWS"/>
+                            <constraint firstItem="R7c-dv-lbh" firstAttribute="centerY" secondItem="eHF-zE-nV3" secondAttribute="centerY" constant="50" id="MMT-Hh-CXx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="R7c-dv-lbh" secondAttribute="trailing" constant="100" id="djP-bF-QF7"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Coe-X5-wea" secondAttribute="trailing" constant="50" id="jyK-nT-LFQ"/>
+                            <constraint firstItem="Coe-X5-wea" firstAttribute="leading" secondItem="eHF-zE-nV3" secondAttribute="leadingMargin" constant="50" id="oAw-bw-y1q"/>
+                            <constraint firstItem="Coe-X5-wea" firstAttribute="centerY" secondItem="eHF-zE-nV3" secondAttribute="centerY" constant="-50" id="rcV-Ij-ecn"/>
+                            <constraint firstItem="Coe-X5-wea" firstAttribute="centerX" secondItem="eHF-zE-nV3" secondAttribute="centerX" id="xSw-Lh-UOT"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Intro!" id="9ra-Ax-hvc"/>
+                    <connections>
+                        <outlet property="usernameField" destination="Coe-X5-wea" id="TI9-GF-hKg"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="goToMap" id="7sc-zV-vrj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rbf-aS-USM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="440.80000000000001" y="-8.5457271364317844"/>
+        </scene>
+        <!--Map Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MapController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1260" y="-7.6461769115442282"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="OB4-lh-pEJ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ex1-YD-sg6" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hPW-Ns-GCw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="8fP-OV-xQs" kind="relationship" relationship="rootViewController" id="OSv-8f-WLw"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ALV-cS-Noj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-498.39999999999998" y="-8.5457271364317844"/>
         </scene>
     </scenes>
 </document>

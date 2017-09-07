@@ -10,26 +10,30 @@ import UIKit
 
 class SplashController: UIViewController {
 
+    var username: String?
+    @IBOutlet weak var usernameField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        print("SplashController")
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func jumpIn(_ sender: UIButton) {
+        print("jump in with", usernameField.text ?? "")
+        
+        if let checkUsername = usernameField.text {
+            username = checkUsername
+            view.endEditing(true)
+            performSegue(withIdentifier: "goToMap", sender: self)
+        }
     }
-    */
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToMap" {
+            let destinationVC = segue.destination as! MapController
+            destinationVC.username = username
+        }
+    }
+    
 
 }
