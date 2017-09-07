@@ -10,7 +10,7 @@ import UIKit
 import Contacts
 import GoogleMaps
 
-class ViewController: UIViewController, GMSMapViewDelegate {
+class MapController: UIViewController, GMSMapViewDelegate {
     
     var locationManager = CLLocationManager()
     var currentLocation: CLLocation?
