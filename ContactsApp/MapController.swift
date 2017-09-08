@@ -11,14 +11,14 @@ import GoogleMaps
 
 class MapController: UIViewController, GMSMapViewDelegate {
     
-    var isLoading: Bool = false
-    
     var username: String!
     
     var mapView: GMSMapView!
     var myLocationFound: Bool!
     var me: GMSCircle?
     var meRange: GMSCircle?
+    
+    var isLoading: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +43,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         print("tap at", coordinate.latitude, coordinate.longitude)
-        if (!isLoading) {
+        if isLoading == false {
             isLoading = true
             markCircle(atCoordinate: coordinate)
             DBManager.addUser(username: username, latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -52,17 +52,25 @@ class MapController: UIViewController, GMSMapViewDelegate {
     
     func markCircle(atCoordinate coordinate: CLLocationCoordinate2D) {
         me?.map = nil
-        meRange?.map = nil
-        
         me = GMSCircle(position: coordinate, radius: 25)
-        meRange = GMSCircle(position: coordinate, radius: 1000)
+        me!.strokeColor = UIColor.black
+        me!.fillColor = UIColor.black
+        me!.map = mapView
         
-        me?.strokeColor = UIColor.black
-        me?.fillColor = UIColor.black
-        meRange?.strokeColor = UIColor.black
-        
-        me?.map = mapView
-        meRange?.map = mapView
+        for i in 1...10 {
+            let delay = Double(i) * 0.25
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                let radius = Double(i) * 100
+                self.meRange?.map = nil
+                self.meRange = GMSCircle(position: coordinate, radius: radius)
+                self.meRange!.strokeColor = UIColor.black
+                self.meRange!.map = self.mapView
+                
+                if i == 10 {
+                    self.isLoading = false
+                }
+            }
+        }
     }
     
     func removeMyLocationObserver() {
