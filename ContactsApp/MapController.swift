@@ -18,11 +18,21 @@ class MapController: UIViewController, GMSMapViewDelegate {
     var me: GMSCircle?
     var meRange: GMSCircle?
     
-    var isLoading: Bool = false
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.title = "Loading..."
+            } else {
+                self.title = "Tap Hangout Location"
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("MapController", username)
+        
+        self.title = "Tap Hangout Location"
         
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 1.0)
         mapView = GMSMapView.map(withFrame: view.bounds, camera: camera)
@@ -58,7 +68,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
         me!.map = mapView
         
         for i in 1...10 {
-            let delay = Double(i) * 0.25
+            let delay = Double(i) * 0.1
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                 let radius = Double(i) * 100
                 self.meRange?.map = nil
@@ -74,7 +84,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
     }
     
     func removeMyLocationObserver() {
-        if (myLocationFound == false) {
+        if myLocationFound == false {
             myLocationFound = true
             mapView.removeObserver(self, forKeyPath: "myLocation")
         }

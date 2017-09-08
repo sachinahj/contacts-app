@@ -21,10 +21,10 @@ class ContactsManager {
         let contactStatus = CNContactStore.authorizationStatus(for: .contacts)
         print("Authorization Status: rawValue", contactStatus.rawValue)
         
-        if (contactStatus != .authorized) {
+        if contactStatus != .authorized {
             contactStore.requestAccess(for: .contacts, completionHandler:
             { (granted, error) in
-                if (granted) {
+                if granted {
                     self.fetch(completion: completion)
                 }
                 if let errorDescription = error?.localizedDescription {
