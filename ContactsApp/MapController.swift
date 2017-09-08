@@ -9,14 +9,15 @@
 import UIKit
 import GoogleMaps
 
-class MapController: UIViewController, GMSMapViewDelegate {
+class MapController: UIViewController, GMSMapViewDelegate, UserDelegate {
     
+    let dbManager: DBManager = DBManager()
     var username: String!
     
     var mapView: GMSMapView!
     var myLocationFound: Bool!
-    var me: GMSCircle?
-    var meRange: GMSCircle?
+    var me: User?
+    var friends: [User] = []
     
     var isLoading: Bool = false {
         didSet {
@@ -36,17 +37,15 @@ class MapController: UIViewController, GMSMapViewDelegate {
         
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 1.0)
         mapView = GMSMapView.map(withFrame: view.bounds, camera: camera)
-        
         mapView.settings.compassButton = true
         mapView.settings.myLocationButton = true
         mapView.isMyLocationEnabled = true
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        mapView.delegate = self
-        
-        // https://stackoverflow.com/questions/40986708/google-maps-start-at-user-location
         mapView.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
         myLocationFound = false
+
+        mapView.delegate = self
+        dbManager.delegate = self
         
         view = mapView
     }
@@ -55,27 +54,52 @@ class MapController: UIViewController, GMSMapViewDelegate {
         print("tap at", coordinate.latitude, coordinate.longitude)
         if isLoading == false {
             isLoading = true
-            markCircle(atCoordinate: coordinate)
-            DBManager.addUser(username: username, latitude: coordinate.latitude, longitude: coordinate.longitude)
-            DBManager.observePeeps()
+            let me = dbManager.updateMe(username: username, coordinate: coordinate)
+            markMe(me: me)
+            print("===========", me.key)
         }
     }
     
-    func markCircle(atCoordinate coordinate: CLLocationCoordinate2D) {
-        me?.map = nil
-        me = GMSCircle(position: coordinate, radius: 25)
-        me!.strokeColor = UIColor.black
-        me!.fillColor = UIColor.black
-        me!.map = mapView
+    func friendFound(friend: User) {
+        print("friend.key", friend.key)
+        guard let meKey = me?.key, meKey != friend.key else {
+            return
+        }
+    
+        let marker = GMSCircle(position: friend.coordinate, radius: 25)
+        marker.strokeColor = UIColor.red
+        marker.fillColor = UIColor.red
+        marker.map = mapView
+    
+        friend.marker = marker
+        friends.append(friend)
+    }
+    
+    
+    func friendLeft(friend: User) {
+        print("friendLeft", friend)
+    }
+    
+    func markMe(me user: User) {
+        me?.marker?.map = nil
+        me?.range?.map = nil
+        
+        let marker = GMSCircle(position: user.coordinate, radius: 25)
+        marker.strokeColor = UIColor.blue
+        marker.fillColor = UIColor.blue
+        marker.map = mapView
+        
+        user.marker = marker
+        me = user
         
         for i in 1...10 {
             let delay = Double(i) * 0.1
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                 let radius = Double(i) * 100
-                self.meRange?.map = nil
-                self.meRange = GMSCircle(position: coordinate, radius: radius)
-                self.meRange!.strokeColor = UIColor.black
-                self.meRange!.map = self.mapView
+                self.me!.range?.map = nil
+                self.me!.range = GMSCircle(position: user.coordinate, radius: radius)
+                self.me!.range!.strokeColor = UIColor.black
+                self.me!.range!.map = self.mapView
                 
                 if i == 10 {
                     self.isLoading = false
@@ -83,7 +107,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
             }
         }
     }
-    
+
     func removeMyLocationObserver() {
         if myLocationFound == false {
             myLocationFound = true
@@ -98,7 +122,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
     }
     
     deinit {
-        DBManager.removeUser()
+        dbManager.removeMe()
         removeMyLocationObserver()
     }
     

@@ -8,67 +8,67 @@
 
 import Foundation
 import FirebaseDatabase
+import GoogleMaps
 
-fileprivate let ref: DatabaseReference = Database.database().reference()
-fileprivate var key: String?
-fileprivate var peeps = [User]()
+protocol UserDelegate {
+    func friendFound(friend: User)
+    func friendLeft(friend: User)
+}
 
 class DBManager {
     
-    static func addUser(username: String, latitude: Double, longitude: Double) {
-        removeUser()
+    var ref: DatabaseReference!
+    var delegate: UserDelegate?
+    var me: User?
+    
+    func updateMe(username: String, coordinate: CLLocationCoordinate2D) -> User {
+        removeMe()
         
-        let user = User(username: username, latitude: latitude, longitude: longitude)
-        key = ref.childByAutoId().key
+        ref = Database.database().reference()
+        let key = ref.childByAutoId().key
+        let user = User(key: key, username: username, coordinate: coordinate)
         
-        let updates = ["/\(key!)": user.toJson()]
+        let updates = ["/\(user.key)": user.toJson()]
         ref.updateChildValues(updates)
+        
+        observe()
+        
+        me = user
+        return me!
     }
     
-    static func removeUser() {
-        if let _key = key {
-            ref.child(_key).removeValue()
+    func removeMe() {
+        ref = Database.database().reference()
+        ref.removeAllObservers()
+        
+        if let _me = me {
+            ref.child(_me.key).removeValue()
         }
     }
     
-    static func observePeeps() {
-        ref.removeAllObservers()
-        peeps = [User]()
-        
+    func observe() {
+        ref = Database.database().reference()
         ref.observe(.childAdded, with: { snapshot in
-            let userDict = snapshot.value as! [String : String]
-            let user = User(
-                username: userDict["username"]!,
-                latitude: Double(userDict["latitude"]!)!,
-                longitude: Double(userDict["longitude"]!)!
-            )
-            user.key = snapshot.key
-            print("added", user, user.key!)
-            peeps.append(user)
+            let friend = self.getUserFromSnapshot(snapshot: snapshot)
+            self.delegate?.friendFound(friend: friend)
         })
         
         ref.observe(.childRemoved, with: { snapshot in
-            let userDict = snapshot.value as! [String : String]
-            print("removed", userDict)
+            let friend = self.getUserFromSnapshot(snapshot: snapshot)
+            self.delegate?.friendLeft(friend: friend)
         })
+    }
+    
+    private func getUserFromSnapshot(snapshot: DataSnapshot) -> User {
+        let userDict = snapshot.value as! [String : String]
+        let latitude = Double(userDict["latitude"]!)!
+        let longitude = Double(userDict["longitude"]!)!
+        let user = User(
+            key: snapshot.key,
+            username: userDict["username"]!,
+            coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        )
+        return user
     }
 }
 
-class User {
-    var key: String?
-    var username: String!
-    var latitude: Double!
-    var longitude: Double!
-    
-    init(username: String, latitude: Double, longitude: Double) {
-        self.username = username
-        self.latitude = latitude
-        self.longitude = longitude
-    }
-    
-    func toJson() -> [String: String] {
-        return ["username": self.username,
-                "latitude": String(self.latitude),
-                "longitude": String(self.longitude)]
-    }
-}
