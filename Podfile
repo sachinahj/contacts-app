@@ -8,5 +8,7 @@ target 'ContactsApp' do
   # Pods for ContactsApp
   pod 'GoogleMaps'
   pod 'GooglePlaces'
+  pod 'Firebase/Core'
+  pod 'Firebase/Database'
 
 end

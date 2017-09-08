@@ -7,12 +7,15 @@
 //
 
 import UIKit
-import Contacts
 import GoogleMaps
+
 
 class MapController: UIViewController, GMSMapViewDelegate {
     
-    var username: String?
+    var dbManager: DBManager = DBManager()
+    var isLoading: Bool = false
+    
+    var username: String!
     
     var mapView: GMSMapView!
     var myLocationFound: Bool!
@@ -41,8 +44,12 @@ class MapController: UIViewController, GMSMapViewDelegate {
     }
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-        print("It works", coordinate.latitude, coordinate.longitude)
-        markCircle(atCoordinate: coordinate)
+        print("tap at", coordinate.latitude, coordinate.longitude)
+        if (!isLoading) {
+            isLoading = true
+            markCircle(atCoordinate: coordinate)
+            dbManager.addUser(username: username, latitude: coordinate.latitude, longitude: coordinate.longitude)
+        }
     }
     
     func markCircle(atCoordinate coordinate: CLLocationCoordinate2D) {
@@ -60,20 +67,21 @@ class MapController: UIViewController, GMSMapViewDelegate {
         meRange?.map = mapView
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let update = change, let myLocation = update[NSKeyValueChangeKey.newKey] as? CLLocation else { return }
-        mapView.camera = GMSCameraPosition.camera(withTarget: myLocation.coordinate, zoom: 15.0)
+    func removeMyLocationObserver() {
         if (myLocationFound == false) {
             myLocationFound = true
             mapView.removeObserver(self, forKeyPath: "myLocation")
         }
     }
     
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard let update = change, let myLocation = update[NSKeyValueChangeKey.newKey] as? CLLocation else { return }
+        mapView.camera = GMSCameraPosition.camera(withTarget: myLocation.coordinate, zoom: 15.0)
+        removeMyLocationObserver()
+    }
+    
     deinit {
-        if (myLocationFound == false) {
-            myLocationFound = true
-            mapView.removeObserver(self, forKeyPath: "myLocation")
-        }
+        removeMyLocationObserver()
     }
     
 }
