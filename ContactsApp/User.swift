@@ -10,14 +10,14 @@ import Foundation
 import GoogleMaps
 
 class User {
-    var key: String
+    var id: String
     var username: String
     var coordinate: CLLocationCoordinate2D
     var marker: GMSCircle?
     var range: GMSCircle?
     
-    init(key: String, username: String, coordinate: CLLocationCoordinate2D) {
-        self.key = key
+    init(id: String, username: String, coordinate: CLLocationCoordinate2D) {
+        self.id = id
         self.username = username
         self.coordinate = coordinate
     }

@@ -10,15 +10,15 @@ import Foundation
 import FirebaseDatabase
 import GoogleMaps
 
-protocol UserDelegate {
-    func friendFound(friend: User)
-    func friendLeft(friend: User)
+protocol DBManagerDelegate {
+    func dbManager(friendFound: User)
+    func dbManager(friendLeft: User)
 }
 
 class DBManager {
     
     var ref: DatabaseReference!
-    var delegate: UserDelegate?
+    var delegate: DBManagerDelegate?
     var me: User?
     
     func updateMe(username: String, coordinate: CLLocationCoordinate2D) -> User {
@@ -26,9 +26,9 @@ class DBManager {
         
         ref = Database.database().reference()
         let key = ref.childByAutoId().key
-        let user = User(key: key, username: username, coordinate: coordinate)
+        let user = User(id: key, username: username, coordinate: coordinate)
         
-        let updates = ["/\(user.key)": user.toJson()]
+        let updates = ["/\(user.id)": user.toJson()]
         ref.updateChildValues(updates)
         
         observe()
@@ -42,7 +42,7 @@ class DBManager {
         ref.removeAllObservers()
         
         if let _me = me {
-            ref.child(_me.key).removeValue()
+            ref.child(_me.id).removeValue()
         }
     }
     
@@ -50,12 +50,12 @@ class DBManager {
         ref = Database.database().reference()
         ref.observe(.childAdded, with: { snapshot in
             let friend = self.getUserFromSnapshot(snapshot: snapshot)
-            self.delegate?.friendFound(friend: friend)
+            self.delegate?.dbManager(friendFound: friend)
         })
         
         ref.observe(.childRemoved, with: { snapshot in
             let friend = self.getUserFromSnapshot(snapshot: snapshot)
-            self.delegate?.friendLeft(friend: friend)
+            self.delegate?.dbManager(friendLeft: friend)
         })
     }
     
@@ -64,7 +64,7 @@ class DBManager {
         let latitude = Double(userDict["latitude"]!)!
         let longitude = Double(userDict["longitude"]!)!
         let user = User(
-            key: snapshot.key,
+            id: snapshot.key,
             username: userDict["username"]!,
             coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         )

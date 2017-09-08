@@ -9,13 +9,14 @@
 import UIKit
 import GoogleMaps
 
-class MapController: UIViewController, GMSMapViewDelegate, UserDelegate {
+class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
-    let dbManager: DBManager = DBManager()
-    var username: String!
+    var dbManager: DBManager!
     
     var mapView: GMSMapView!
     var myLocationFound: Bool!
+    
+    var username: String!
     var me: User?
     var friends: [User] = []
     
@@ -43,66 +44,79 @@ class MapController: UIViewController, GMSMapViewDelegate, UserDelegate {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
         myLocationFound = false
-
         mapView.delegate = self
+        
+        dbManager = DBManager()
         dbManager.delegate = self
         
         view = mapView
     }
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-        print("tap at", coordinate.latitude, coordinate.longitude)
         if isLoading == false {
             isLoading = true
+            resetFriends()
             let me = dbManager.updateMe(username: username, coordinate: coordinate)
             markMe(me: me)
-            print("===========", me.key)
         }
     }
     
-    func friendFound(friend: User) {
-        print("friend.key", friend.key)
-        guard let meKey = me?.key, meKey != friend.key else {
-            return
-        }
-    
-        let marker = GMSCircle(position: friend.coordinate, radius: 25)
-        marker.strokeColor = UIColor.red
-        marker.fillColor = UIColor.red
-        marker.map = mapView
-    
-        friend.marker = marker
-        friends.append(friend)
+    func dbManager(friendFound: User) {
+        guard let id = me?.id, id != friendFound.id else { return }
+        markFriend(friend: friendFound)
+        friends.append(friendFound)
     }
     
-    
-    func friendLeft(friend: User) {
-        print("friendLeft", friend)
+    func dbManager(friendLeft: User) {
+        print("friendLeft", friendLeft)
+        if let index = friends.index(where: { friend in friend.id == friendLeft.id }) {
+            friends[index].marker?.map = nil
+        }
     }
     
     func markMe(me user: User) {
         me?.marker?.map = nil
         me?.range?.map = nil
-        
-        let marker = GMSCircle(position: user.coordinate, radius: 25)
-        marker.strokeColor = UIColor.blue
-        marker.fillColor = UIColor.blue
-        marker.map = mapView
-        
-        user.marker = marker
+        markUser(user: user, color: UIColor.blue)
+        markUserRange(user: user, color: UIColor.blue)
         me = user
+    }
+    
+    func markFriend(friend user: User) {
+        markUser(user: user, color: UIColor.red)
+    }
+    
+    func resetFriends() {
+        friends.forEach({ friend in friend.marker?.map = nil })
+        friends = []
+    }
+    
+    func markUser(user: User, color: UIColor) {
+        animateUserMarker(coordinate: user.coordinate, delayMultiplier: 0.05, radiusMultiplier: 2.5, strokeColor: color, fillColor: color, completion: { marker in user.marker = marker })
+    }
+    
+    func markUserRange(user: User, color: UIColor) {
+        animateUserMarker(coordinate: user.coordinate, delayMultiplier: 0.1, radiusMultiplier: 100, strokeColor: color, fillColor: nil, completion: { marker in
+            user.range = marker
+            self.isLoading = false
+        })
+    }
+    
+    func animateUserMarker(coordinate: CLLocationCoordinate2D, delayMultiplier: Double, radiusMultiplier: Double, strokeColor: UIColor, fillColor: UIColor?, completion: ((GMSCircle) -> Void)?) {
+        var marker: GMSCircle?
         
         for i in 1...10 {
-            let delay = Double(i) * 0.1
+            let delay = Double(i) * delayMultiplier
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                let radius = Double(i) * 100
-                self.me!.range?.map = nil
-                self.me!.range = GMSCircle(position: user.coordinate, radius: radius)
-                self.me!.range!.strokeColor = UIColor.black
-                self.me!.range!.map = self.mapView
+                let radius = Double(i) * radiusMultiplier
+                marker?.map = nil
+                marker = GMSCircle(position: coordinate, radius: radius)
+                marker!.strokeColor = strokeColor
+                if let color = fillColor { marker!.fillColor = color }
+                marker!.map = self.mapView
                 
                 if i == 10 {
-                    self.isLoading = false
+                    if let _completion = completion { _completion(marker!) }
                 }
             }
         }
