@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		031F02421F5DB36900E96002 /* ContactsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031F02411F5DB36900E96002 /* ContactsManager.swift */; };
+		033193941F6234FC000658D8 /* ExtensionsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033193931F6234FC000658D8 /* ExtensionsUI.swift */; };
 		037039F71F61DD6B007CD1C6 /* SplashController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037039F61F61DD6B007CD1C6 /* SplashController.swift */; };
 		03BA06031F5C887800956BD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BA06021F5C887800956BD6 /* AppDelegate.swift */; };
 		03BA06051F5C887800956BD6 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BA06041F5C887800956BD6 /* MapController.swift */; };
@@ -19,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		031F02411F5DB36900E96002 /* ContactsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsManager.swift; sourceTree = "<group>"; };
+		033193931F6234FC000658D8 /* ExtensionsUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionsUI.swift; sourceTree = "<group>"; };
 		037039F61F61DD6B007CD1C6 /* SplashController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashController.swift; sourceTree = "<group>"; };
 		03BA05FF1F5C887800956BD6 /* ContactsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03BA06021F5C887800956BD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				03BA06091F5C887800956BD6 /* Assets.xcassets */,
 				03BA060B1F5C887800956BD6 /* LaunchScreen.storyboard */,
 				03BA060E1F5C887800956BD6 /* Info.plist */,
+				033193931F6234FC000658D8 /* ExtensionsUI.swift */,
 				031F02411F5DB36900E96002 /* ContactsManager.swift */,
 			);
 			path = ContactsApp;
@@ -225,6 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				033193941F6234FC000658D8 /* ExtensionsUI.swift in Sources */,
 				037039F71F61DD6B007CD1C6 /* SplashController.swift in Sources */,
 				03BA06051F5C887800956BD6 /* MapController.swift in Sources */,
 				031F02421F5DB36900E96002 /* ContactsManager.swift in Sources */,

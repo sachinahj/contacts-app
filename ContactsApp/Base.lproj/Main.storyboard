@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Intro!-->
+        <!--Splash Controller-->
         <scene sceneID="ezv-4e-Ll2">
             <objects>
                 <viewController id="8fP-OV-xQs" customClass="SplashController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -22,43 +22,56 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Coe-X5-wea">
-                                <rect key="frame" x="70" y="303" width="274" height="30"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
-                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R7c-dv-lbh">
-                                <rect key="frame" x="120" y="403" width="174" height="30"/>
-                                <color key="backgroundColor" red="0.11937905940256055" green="0.88874128304243527" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <state key="normal" title="Jump In!"/>
+                                <rect key="frame" x="70" y="350.66666666666669" width="274" height="36"/>
+                                <color key="backgroundColor" red="0.1764705882352941" green="0.19215686274509802" blue="0.25882352941176467" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
+                                <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="Jump In!">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <action selector="jumpIn:" destination="8fP-OV-xQs" eventType="touchUpInside" id="JGe-RN-nD5"/>
+                                    <action selector="jumpInOnClick:" destination="8fP-OV-xQs" eventType="touchUpInside" id="GRp-HY-PKA"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Coe-X5-wea">
+                                <rect key="frame" x="20" y="193" width="374" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="y2t-S3-14M"/>
+                                </constraints>
+                                <color key="textColor" red="0.1764705882352941" green="0.19215686274509802" blue="0.25882352941176467" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="25"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                                <connections>
+                                    <action selector="usernameFieldOnChange:" destination="8fP-OV-xQs" eventType="editingChanged" id="LrS-2x-reD"/>
+                                </connections>
+                            </textField>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.51372549020000002" blue="0.3294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="R7c-dv-lbh" firstAttribute="leading" secondItem="eHF-zE-nV3" secondAttribute="leadingMargin" constant="100" id="1Zc-30-Yup"/>
+                            <constraint firstItem="R7c-dv-lbh" firstAttribute="leading" secondItem="eHF-zE-nV3" secondAttribute="leadingMargin" constant="50" id="1Zc-30-Yup"/>
                             <constraint firstItem="R7c-dv-lbh" firstAttribute="centerX" secondItem="eHF-zE-nV3" secondAttribute="centerX" id="AGb-TO-JWS"/>
-                            <constraint firstItem="R7c-dv-lbh" firstAttribute="centerY" secondItem="eHF-zE-nV3" secondAttribute="centerY" constant="50" id="MMT-Hh-CXx"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="R7c-dv-lbh" secondAttribute="trailing" constant="100" id="djP-bF-QF7"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Coe-X5-wea" secondAttribute="trailing" constant="50" id="jyK-nT-LFQ"/>
-                            <constraint firstItem="Coe-X5-wea" firstAttribute="leading" secondItem="eHF-zE-nV3" secondAttribute="leadingMargin" constant="50" id="oAw-bw-y1q"/>
-                            <constraint firstItem="Coe-X5-wea" firstAttribute="centerY" secondItem="eHF-zE-nV3" secondAttribute="centerY" constant="-50" id="rcV-Ij-ecn"/>
-                            <constraint firstItem="Coe-X5-wea" firstAttribute="centerX" secondItem="eHF-zE-nV3" secondAttribute="centerX" id="xSw-Lh-UOT"/>
+                            <constraint firstItem="Coe-X5-wea" firstAttribute="leading" secondItem="eHF-zE-nV3" secondAttribute="leadingMargin" id="LXd-gz-f2w"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Coe-X5-wea" secondAttribute="trailing" id="MHU-Yg-ITj"/>
+                            <constraint firstItem="R7c-dv-lbh" firstAttribute="centerY" secondItem="eHF-zE-nV3" secondAttribute="centerY" id="MMT-Hh-CXx"/>
+                            <constraint firstItem="Coe-X5-wea" firstAttribute="centerX" secondItem="eHF-zE-nV3" secondAttribute="centerX" id="WjM-h0-Vuf"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="R7c-dv-lbh" secondAttribute="trailing" constant="50" id="djP-bF-QF7"/>
+                            <constraint firstItem="Coe-X5-wea" firstAttribute="centerY" secondItem="eHF-zE-nV3" secondAttribute="centerY" constant="-150" id="rhU-3F-Seg"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Intro!" id="9ra-Ax-hvc"/>
+                    <navigationItem key="navigationItem" id="9ra-Ax-hvc">
+                        <barButtonItem key="backBarButtonItem" title="Backy" id="vKY-oA-emi"/>
+                    </navigationItem>
                     <connections>
+                        <outlet property="jumpIn" destination="R7c-dv-lbh" id="bdE-rE-1lA"/>
                         <outlet property="usernameField" destination="Coe-X5-wea" id="TI9-GF-hKg"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="goToMap" id="7sc-zV-vrj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rbf-aS-USM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="440.80000000000001" y="-8.5457271364317844"/>
+            <point key="canvasLocation" x="440.57971014492756" y="-8.9673913043478262"/>
         </scene>
         <!--Map Controller-->
         <scene sceneID="tne-QT-ifu">
