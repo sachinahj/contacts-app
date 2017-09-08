@@ -9,10 +9,8 @@
 import UIKit
 import GoogleMaps
 
-
 class MapController: UIViewController, GMSMapViewDelegate {
     
-    var dbManager: DBManager = DBManager()
     var isLoading: Bool = false
     
     var username: String!
@@ -48,7 +46,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
         if (!isLoading) {
             isLoading = true
             markCircle(atCoordinate: coordinate)
-            dbManager.addUser(username: username, latitude: coordinate.latitude, longitude: coordinate.longitude)
+            DBManager.addUser(username: username, latitude: coordinate.latitude, longitude: coordinate.longitude)
         }
     }
     
@@ -81,6 +79,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
     }
     
     deinit {
+        DBManager.removeUser()
         removeMyLocationObserver()
     }
     

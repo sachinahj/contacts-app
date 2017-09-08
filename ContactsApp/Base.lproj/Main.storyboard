@@ -61,7 +61,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="9ra-Ax-hvc">
-                        <barButtonItem key="backBarButtonItem" title="Backy" id="vKY-oA-emi"/>
+                        <barButtonItem key="backBarButtonItem" title="Back" id="vKY-oA-emi"/>
                     </navigationItem>
                     <connections>
                         <outlet property="jumpIn" destination="R7c-dv-lbh" id="bdE-rE-1lA"/>
@@ -96,7 +96,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ex1-YD-sg6" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="hPW-Ns-GCw">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hPW-Ns-GCw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

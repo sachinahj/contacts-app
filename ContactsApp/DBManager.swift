@@ -9,18 +9,24 @@
 import Foundation
 import Firebase
 
+fileprivate let ref: DatabaseReference = Database.database().reference()
+fileprivate var key: String?
 
 class DBManager {
     
-    let ref: DatabaseReference = Database.database().reference()
-    var key: String = ""
-    
-    func addUser(username: String, latitude: Double, longitude: Double) {
-        key = ref.child("posts").childByAutoId().key
+    static func addUser(username: String, latitude: Double, longitude: Double) {
+        removeUser()
+        key = ref.childByAutoId().key
         let user = ["username": username,
                     "latitude": String(latitude),
                     "longitude": String(longitude)]
-        let updates = ["/\(key)": user]
+        let updates = ["/\(key!)": user]
         ref.updateChildValues(updates)
+    }
+    
+    static func removeUser() {
+        if let _key = key {
+            ref.child(_key).removeValue()
+        }
     }
 }
