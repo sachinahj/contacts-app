@@ -57,6 +57,7 @@ class MapController: UIViewController, GMSMapViewDelegate {
             isLoading = true
             markCircle(atCoordinate: coordinate)
             DBManager.addUser(username: username, latitude: coordinate.latitude, longitude: coordinate.longitude)
+            DBManager.observePeeps()
         }
     }
     
