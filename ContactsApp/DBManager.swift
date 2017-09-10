@@ -26,14 +26,14 @@ class DBManager {
         
         ref = Database.database().reference()
         let key = ref.childByAutoId().key
-        let user = User(id: key, username: username, coordinate: coordinate)
+        let _me = User(id: key, username: username, coordinate: coordinate)
         
-        let updates = ["/\(user.id)": user.toJson()]
+        let updates = ["/\(_me.id)": _me.toJson()]
         ref.updateChildValues(updates)
         
         observe()
         
-        me = user
+        me = _me
         return me!
     }
     
@@ -41,6 +41,7 @@ class DBManager {
         ref = Database.database().reference()
         ref.removeAllObservers()
         
+        print("DBManager: me", me)
         if let _me = me {
             ref.child(_me.id).removeValue()
         }

@@ -57,7 +57,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
             isLoading = true
             resetFriends()
             let me = dbManager.updateMe(username: username, coordinate: coordinate)
-            markMe(me: me)
+            markMe(me: me, completion: {_ in self.isLoading = false})
         }
     }
     
@@ -74,12 +74,12 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         }
     }
     
-    func markMe(me user: User) {
+    func markMe(me _me: User, completion: @escaping () -> Void) {
         me?.marker?.map = nil
         me?.range?.map = nil
-        markUser(user: user, color: UIColor.blue)
-        markUserRange(user: user, color: UIColor.blue)
-        me = user
+        markUser(user: _me, color: UIColor.blue)
+        markUserRange(user: _me, color: UIColor.blue, completion: completion)
+        me = _me
     }
     
     func markFriend(friend user: User) {
@@ -92,17 +92,17 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     }
     
     func markUser(user: User, color: UIColor) {
-        animateUserMarker(coordinate: user.coordinate, delayMultiplier: 0.05, radiusMultiplier: 2.5, strokeColor: color, fillColor: color, completion: { marker in user.marker = marker })
+        animateMarker(coordinate: user.coordinate, delayMultiplier: 0.05, radiusMultiplier: 2.5, strokeColor: color, fillColor: color, completion: { marker in user.marker = marker })
     }
     
-    func markUserRange(user: User, color: UIColor) {
-        animateUserMarker(coordinate: user.coordinate, delayMultiplier: 0.1, radiusMultiplier: 100, strokeColor: color, fillColor: nil, completion: { marker in
+    func markUserRange(user: User, color: UIColor, completion: @escaping () -> Void) {
+        animateMarker(coordinate: user.coordinate, delayMultiplier: 0.1, radiusMultiplier: 100, strokeColor: color, fillColor: nil, completion: { marker in
             user.range = marker
-            self.isLoading = false
+            completion()
         })
     }
     
-    func animateUserMarker(coordinate: CLLocationCoordinate2D, delayMultiplier: Double, radiusMultiplier: Double, strokeColor: UIColor, fillColor: UIColor?, completion: ((GMSCircle) -> Void)?) {
+    func animateMarker(coordinate: CLLocationCoordinate2D, delayMultiplier: Double, radiusMultiplier: Double, strokeColor: UIColor, fillColor: UIColor?, completion: @escaping (GMSCircle) -> Void) {
         var marker: GMSCircle?
         
         for i in 1...10 {
@@ -116,7 +116,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
                 marker!.map = self.mapView
                 
                 if i == 10 {
-                    if let _completion = completion { _completion(marker!) }
+                    completion(marker!)
                 }
             }
         }
@@ -136,6 +136,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     }
     
     deinit {
+        print("MapController: deinit")
         dbManager.removeMe()
         removeMyLocationObserver()
     }
