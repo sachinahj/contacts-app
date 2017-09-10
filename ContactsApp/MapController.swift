@@ -91,7 +91,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     }
     
     func markUser(user: User, color: UIColor) {
-        let timeline = [(0.05, 5.0),(0.1, 7.5),(0.15, 10.0),(0.2, 7.5),(0.25, 12.5),(0.3, 15.0),(0.35, 20.0),(0.4, 17.5),(0.45, 22.5),(0.5, 25.0)]
+        let timeline = [(0.05, 5.0),(0.1, 10.0),(0.15, 15.0),(0.2, 20.0),(0.25, 25.0),(0.3, 20.0),(0.35, 15.0),(0.4, 10.0),(0.45, 15.0),(0.5, 25.0)]
         
         animateMarker(coordinate: user.coordinate, timeline: timeline, strokeColor: color, fillColor: color, completion: { marker in user.marker = marker })
     }
