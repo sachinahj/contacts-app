@@ -91,30 +91,34 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     }
     
     func markUser(user: User, color: UIColor) {
-        animateMarker(coordinate: user.coordinate, delayMultiplier: 0.05, radiusMultiplier: 2.5, strokeColor: color, fillColor: color, completion: { marker in user.marker = marker })
+        let timeline = [(0.05, 5.0),(0.1, 7.5),(0.15, 10.0),(0.2, 7.5),(0.25, 12.5),(0.3, 15.0),(0.35, 20.0),(0.4, 17.5),(0.45, 22.5),(0.5, 25.0)]
+        
+        animateMarker(coordinate: user.coordinate, timeline: timeline, strokeColor: color, fillColor: color, completion: { marker in user.marker = marker })
     }
     
     func markMeRange(me: Me, color: UIColor, completion: @escaping () -> Void) {
-        animateMarker(coordinate: me.coordinate, delayMultiplier: 0.1, radiusMultiplier: 100, strokeColor: color, fillColor: nil, completion: { marker in
+        let timeline = [(0.1, 100.0),(0.1, 200.0),(0.3, 300.0),(0.4, 400.0),(0.5, 500.0),(0.6, 600.0),(0.7, 700.0),(0.8, 800.0),(0.9, 900.0),(1.0, 1000.0)]
+        
+        animateMarker(coordinate: me.coordinate, timeline: timeline, strokeColor: color, fillColor: nil, completion: { marker in
             me.range = marker
             completion()
         })
     }
     
-    func animateMarker(coordinate: CLLocationCoordinate2D, delayMultiplier: Double, radiusMultiplier: Double, strokeColor: UIColor, fillColor: UIColor?, completion: @escaping (GMSCircle) -> Void) {
+    func animateMarker(coordinate: CLLocationCoordinate2D, timeline: [(Double, Double)], strokeColor: UIColor, fillColor: UIColor?, completion: @escaping (GMSCircle) -> Void) {
         var marker: GMSCircle?
         
-        for i in 1...10 {
-            let delay = Double(i) * delayMultiplier
+        for i in 0..<timeline.count {
+            let delay = timeline[i].0
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                let radius = Double(i) * radiusMultiplier
+                let radius = timeline[i].1
                 marker?.map = nil
                 marker = GMSCircle(position: coordinate, radius: radius)
                 marker!.strokeColor = strokeColor
                 if let color = fillColor { marker!.fillColor = color }
                 marker!.map = self.mapView
                 
-                if i == 10 {
+                if i == timeline.count - 1 {
                     completion(marker!)
                 }
             }
