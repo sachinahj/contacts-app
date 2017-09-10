@@ -16,9 +16,8 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     var mapView: GMSMapView!
     var myLocationFound: Bool!
     
-    var username: String!
-    var me: User?
-    var friends: [User] = []
+    var me: Me?
+    var friends: [Friend] = []
     
     var isLoading: Bool = false {
         didSet {
@@ -32,7 +31,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("MapController", username)
+        print("MapController")
         
         self.title = "Tap Hangout Location"
         
@@ -56,33 +55,33 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         if isLoading == false {
             isLoading = true
             resetFriends()
-            let me = dbManager.updateMe(username: username, coordinate: coordinate)
+            let me = dbManager.updateMe(coordinate: coordinate)
             markMe(me: me, completion: {_ in self.isLoading = false})
         }
     }
     
-    func dbManager(friendFound: User) {
+    func dbManager(friendFound: Friend) {
         guard let id = me?.id, id != friendFound.id else { return }
         markFriend(friend: friendFound)
         friends.append(friendFound)
     }
     
-    func dbManager(friendLeft: User) {
+    func dbManager(friendLeft: Friend) {
         print("friendLeft", friendLeft)
         if let index = friends.index(where: { friend in friend.id == friendLeft.id }) {
             friends[index].marker?.map = nil
         }
     }
     
-    func markMe(me _me: User, completion: @escaping () -> Void) {
+    func markMe(me _me: Me, completion: @escaping () -> Void) {
         me?.marker?.map = nil
         me?.range?.map = nil
         markUser(user: _me, color: UIColor.blue)
-        markUserRange(user: _me, color: UIColor.blue, completion: completion)
+        markMeRange(me: _me, color: UIColor.blue, completion: completion)
         me = _me
     }
     
-    func markFriend(friend user: User) {
+    func markFriend(friend user: Friend) {
         markUser(user: user, color: UIColor.red)
     }
     
@@ -95,9 +94,9 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         animateMarker(coordinate: user.coordinate, delayMultiplier: 0.05, radiusMultiplier: 2.5, strokeColor: color, fillColor: color, completion: { marker in user.marker = marker })
     }
     
-    func markUserRange(user: User, color: UIColor, completion: @escaping () -> Void) {
-        animateMarker(coordinate: user.coordinate, delayMultiplier: 0.1, radiusMultiplier: 100, strokeColor: color, fillColor: nil, completion: { marker in
-            user.range = marker
+    func markMeRange(me: Me, color: UIColor, completion: @escaping () -> Void) {
+        animateMarker(coordinate: me.coordinate, delayMultiplier: 0.1, radiusMultiplier: 100, strokeColor: color, fillColor: nil, completion: { marker in
+            me.range = marker
             completion()
         })
     }

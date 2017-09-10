@@ -10,66 +10,78 @@ import Foundation
 import FirebaseDatabase
 import GoogleMaps
 
-protocol DBManagerDelegate {
-    func dbManager(friendFound: User)
-    func dbManager(friendLeft: User)
+protocol DBManagerDelegate: NSObjectProtocol {
+    func dbManager(friendFound: Friend)
+    func dbManager(friendLeft: Friend)
 }
 
 class DBManager {
+    static var username: String?
+    static var me: Me?
     
     var ref: DatabaseReference!
-    var delegate: DBManagerDelegate?
-    var me: User?
+    weak var delegate: DBManagerDelegate?
     
-    func updateMe(username: String, coordinate: CLLocationCoordinate2D) -> User {
+    func createMe(username: String) {
+        DBManager.me = Me(username: username)
+    }
+    
+    func updateMe(coordinate: CLLocationCoordinate2D) -> Me {
         removeMe()
-        
         ref = Database.database().reference()
-        let key = ref.childByAutoId().key
-        let _me = User(id: key, username: username, coordinate: coordinate)
         
-        let updates = ["/\(_me.id)": _me.toJson()]
+        let key = ref.childByAutoId().key
+        DBManager.me!.id = key
+        DBManager.me!.coordinate = coordinate
+        
+        let updates = ["/\(DBManager.me!.id)": DBManager.me!.toJson()]
         ref.updateChildValues(updates)
         
         observe()
         
-        me = _me
-        return me!
+        return DBManager.me!
     }
     
     func removeMe() {
         ref = Database.database().reference()
         ref.removeAllObservers()
-        
-        print("DBManager: me", me)
-        if let _me = me {
-            ref.child(_me.id).removeValue()
+        if let me = DBManager.me, me.id != "" {
+            ref.child(me.id).removeValue()
         }
     }
     
     func observe() {
         ref = Database.database().reference()
         ref.observe(.childAdded, with: { snapshot in
-            let friend = self.getUserFromSnapshot(snapshot: snapshot)
+            let friend = self.getFriendFromSnapshot(snapshot: snapshot)
             self.delegate?.dbManager(friendFound: friend)
         })
         
         ref.observe(.childRemoved, with: { snapshot in
-            let friend = self.getUserFromSnapshot(snapshot: snapshot)
+            let friend = self.getFriendFromSnapshot(snapshot: snapshot)
             self.delegate?.dbManager(friendLeft: friend)
         })
     }
     
-    private func getUserFromSnapshot(snapshot: DataSnapshot) -> User {
+    private func getFriendFromSnapshot(snapshot: DataSnapshot) -> Friend {
         let userDict = snapshot.value as! [String : String]
+        
+        let key = snapshot.key
+        let username = userDict["username"]!
         let latitude = Double(userDict["latitude"]!)!
         let longitude = Double(userDict["longitude"]!)!
-        let user = User(
-            id: snapshot.key,
-            username: userDict["username"]!,
+        
+        let friend = Friend(
+            id: key,
+            username: username,
             coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         )
-        return user
+        
+        return friend
+    }
+    
+    deinit {
+        print("DBManager: deinit")
     }
 }
 

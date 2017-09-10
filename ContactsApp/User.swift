@@ -14,12 +14,19 @@ class User {
     var username: String
     var coordinate: CLLocationCoordinate2D
     var marker: GMSCircle?
-    var range: GMSCircle?
     
     init(id: String, username: String, coordinate: CLLocationCoordinate2D) {
         self.id = id
         self.username = username
         self.coordinate = coordinate
+    }
+}
+
+class Me: User {
+    var range: GMSCircle?
+    
+    convenience init(username: String) {
+        self.init(id: "", username: username, coordinate: CLLocationCoordinate2D())
     }
     
     func toJson() -> [String: String] {
@@ -28,3 +35,5 @@ class User {
                 "longitude": String(self.coordinate.longitude)]
     }
 }
+
+class Friend: User {}
