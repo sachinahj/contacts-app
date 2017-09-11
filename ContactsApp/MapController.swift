@@ -63,11 +63,6 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         }
     }
     
-    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        print(marker)
-        return false
-    }
-    
     func dbManager(friendFound: Friend) {
         markFriend(friend: friendFound)
         updateChatCount()
@@ -79,7 +74,6 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     }
     
     func updateChatCount() {
-        print("DBManager.friends.count", DBManager.friends.count)
         chatButton.title = "Chat (\(DBManager.friends.count)) >"
         if DBManager.friends.count > 0 {
             self.navigationItem.rightBarButtonItem = chatButton
@@ -96,7 +90,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         me?.marker?.map = nil
         me?.range?.map = nil
         markUser(user: _me, color: UIColor.blue)
-        markMeRange(me: _me, color: UIColor.blue, completion: completion)
+        markRange(me: _me, color: UIColor.blue, completion: completion)
         me = _me
     }
     
@@ -115,7 +109,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         })
     }
     
-    func markMeRange(me: Me, color: UIColor, completion: @escaping () -> Void) {
+    func markRange(me: Me, color: UIColor, completion: @escaping () -> Void) {
         let timeline = [(0.1, 100.0),(0.1, 200.0),(0.3, 300.0),(0.4, 400.0),(0.5, 500.0),(0.6, 600.0),(0.7, 700.0),(0.8, 800.0),(0.9, 900.0),(1.0, 1000.0)]
         animateMarker(coordinate: me.coordinate, timeline: timeline, strokeColor: color, fillColor: nil, completion: { marker in
             me.range = marker
