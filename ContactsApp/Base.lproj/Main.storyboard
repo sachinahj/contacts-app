@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R7c-dv-lbh">
-                                <rect key="frame" x="70" y="331.33333333333331" width="274" height="75"/>
+                                <rect key="frame" x="70" y="330.66666666666669" width="274" height="75"/>
                                 <color key="backgroundColor" red="0.1764705882352941" green="0.19215686274509802" blue="0.25882352941176467" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="75" id="Oa9-cK-qP2"/>
@@ -121,12 +121,47 @@
                     <view key="view" contentMode="scaleToFill" id="FXX-tY-V7L">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nbO-om-B87">
+                                <rect key="frame" x="167" y="353" width="80" height="30"/>
+                                <color key="backgroundColor" red="0.74901960784313726" green="0.75294117647058822" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="xFb-nE-cBX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
+                                <state key="normal" title="Send">
+                                    <color key="titleColor" red="0.30980392156862746" green="0.36470588235294116" blue="0.45882352941176469" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendButtonPressed:" destination="KOL-DF-gxM" eventType="touchUpInside" id="t6L-I7-rtf"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6JJ-ez-ZlO">
+                                <rect key="frame" x="60" y="305" width="294" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="rDQ-Yn-QwU"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="chatTextFieldChanged:" destination="KOL-DF-gxM" eventType="editingDidEnd" id="TSM-6g-sc5"/>
+                                </connections>
+                            </textField>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="ETy-Sw-uP0">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="jM7-wy-h80"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="chatTextField" destination="6JJ-ez-ZlO" id="YP3-5L-QIJ"/>
+                        <outlet property="sendButton" destination="nbO-om-B87" id="Bgr-Gf-eWe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5NG-8d-R2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2077" y="-8"/>
+            <point key="canvasLocation" x="2075.36231884058" y="-8.1521739130434785"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OB4-lh-pEJ">

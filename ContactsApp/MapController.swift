@@ -11,7 +11,7 @@ import GoogleMaps
 
 class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
-    var dbManager: DBManager!
+    var dbManager: DBManager = DBManager()
     var me: Me?
     var mapView: GMSMapView!
     var myLocationFound: Bool!
@@ -46,9 +46,8 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
         myLocationFound = false
-        mapView.delegate = self
         
-        dbManager = DBManager()
+        mapView.delegate = self
         dbManager.delegate = self
         
         view = mapView
@@ -57,14 +56,19 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         if isLoading == false {
             isLoading = true
-            unmarkAllFriends()
-            let me = dbManager.updateMe(coordinate: coordinate)
-            markMe(me: me, completion: {_ in self.isLoading = false})
+            
+            DBManager.friends.forEach({ friend in friend.marker?.map = nil })
+            DBManager.me!.marker?.map = nil
+            DBManager.me!.range?.map = nil
+            
+            dbManager.updateMe(coordinate: coordinate)
+            markUser(user: DBManager.me!, color: UIColor.blue)
+            markRange(me: DBManager.me!, color: UIColor.blue, completion: completion)
         }
     }
     
     func dbManager(friendFound: Friend) {
-        markFriend(friend: friendFound)
+        markUser(user: friendFound, color: UIColor.red)
         updateChatCount()
     }
     
@@ -84,22 +88,6 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
     func chatButtonPressed(sender: UIButton!) {
         performSegue(withIdentifier: "goToChat", sender: self)
-    }
-    
-    func markMe(me _me: Me, completion: @escaping () -> Void) {
-        me?.marker?.map = nil
-        me?.range?.map = nil
-        markUser(user: _me, color: UIColor.blue)
-        markRange(me: _me, color: UIColor.blue, completion: completion)
-        me = _me
-    }
-    
-    func markFriend(friend: Friend) {
-        markUser(user: friend, color: UIColor.red)
-    }
-    
-    func unmarkAllFriends() {
-        DBManager.friends.forEach({ friend in friend.marker?.map = nil })
     }
     
     func markUser(user: User, color: UIColor) {

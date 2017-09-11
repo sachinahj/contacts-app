@@ -10,9 +10,13 @@ import Foundation
 import FirebaseDatabase
 import GoogleMaps
 
-protocol DBManagerDelegate: NSObjectProtocol {
-    func dbManager(friendFound: Friend)
-    func dbManager(friendLeft: Friend)
+protocol DBManagerDelegate: class {
+}
+
+extension DBManagerDelegate {
+    func dbManager(friendFound: Friend) {}
+    func dbManager(friendLeft: Friend) {}
+    func dbManager(friendsUpdated: Int) {}
 }
 
 class DBManager {
@@ -27,7 +31,7 @@ class DBManager {
         DBManager.me = Me(username: username)
     }
     
-    func updateMe(coordinate: CLLocationCoordinate2D) -> Me {
+    func updateMe(coordinate: CLLocationCoordinate2D) {
         removeMe()
         ref = Database.database().reference()
         
@@ -39,8 +43,6 @@ class DBManager {
         ref.updateChildValues(updates)
         
         observe()
-        
-        return DBManager.me!
     }
     
     func removeMe() {
@@ -57,6 +59,7 @@ class DBManager {
             guard let id = DBManager.me?.id, id != friend.id else { return }
             DBManager.friends.append(friend)
             self.delegate?.dbManager(friendFound: friend)
+            self.delegate?.dbManager(friendsUpdated: 1)
         })
         
         ref.observe(.childRemoved, with: { snapshot in
@@ -65,6 +68,7 @@ class DBManager {
                 let friend = DBManager.friends[index]
                 DBManager.friends.remove(at: index)
                 self.delegate?.dbManager(friendLeft: friend)
+                self.delegate?.dbManager(friendsUpdated: 0)
             }
         })
     }
