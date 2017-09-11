@@ -10,7 +10,6 @@ import UIKit
 
 class SplashController: UIViewController {
 
-    var dbManager: DBManager = DBManager()
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var jumpInButton: UIButton!
     
@@ -33,7 +32,7 @@ class SplashController: UIViewController {
         if usernameTextField.text! != "" {
             view.endEditing(true)
             let username = usernameTextField.text?.trimmingCharacters(in: .whitespaces)
-            dbManager.createMe(username: username!)
+            DBManager.createMe(username: username!)
             performSegue(withIdentifier: "goToMap", sender: self)
         } else {
             usernameTextField.shake()

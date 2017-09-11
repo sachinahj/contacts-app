@@ -13,13 +13,13 @@ import GoogleMaps
 protocol DBManagerDelegate: class {
     func dbManager(friendFound: Friend)
     func dbManager(friendLeft: Friend)
-    func dbManager(friendsUpdated: Int)
+    func dbManager(friendsUpdated count: Int)
 }
 
 extension  DBManagerDelegate {
     func dbManager(friendFound: Friend) {}
     func dbManager(friendLeft: Friend) {}
-    func dbManager(friendsUpdated: Int) {}
+    func dbManager(friendsUpdated count: Int) {}
 
 }
 
@@ -28,58 +28,56 @@ class DBManager {
     static var me: Me?
     static var friends: [Friend] = []
     
-    var ref: DatabaseReference!
-    weak var delegate: DBManagerDelegate?
+    static var ref: DatabaseReference!
+    static var delegates: [String: DBManagerDelegate] = [:]
     
-    func createMe(username: String) {
+    static func createMe(username: String) {
         DBManager.me = Me(username: username)
     }
     
-    func updateMe(coordinate: CLLocationCoordinate2D) {
-        removeMe()
-        ref = Database.database().reference()
+    static func updateMe(coordinate: CLLocationCoordinate2D) {
+        DBManager.removeMe()
+        DBManager.ref = Database.database().reference()
         
-        let key = ref.childByAutoId().key
+        let key = DBManager.ref.childByAutoId().key
         DBManager.me!.id = key
         DBManager.me!.coordinate = coordinate
         
         let updates = ["/\(DBManager.me!.id)": DBManager.me!.toJson()]
-        ref.updateChildValues(updates)
+        DBManager.ref.updateChildValues(updates)
         
-        observe()
+        self.observe()
     }
     
-    func removeMe() {
-        ref = Database.database().reference()
-        if let me = DBManager.me, me.id != "" { ref.child(me.id).removeValue() }
-        ref.removeAllObservers()
+    static func removeMe() {
+        DBManager.ref = Database.database().reference()
+        if let me = DBManager.me, me.id != "" { DBManager.ref.child(me.id).removeValue() }
+        DBManager.ref.removeAllObservers()
         DBManager.friends = []
     }
     
-    func observe() {
-        ref = Database.database().reference()
-        ref.observe(.childAdded, with: { snapshot in
-            let friend = self.getFriendFromSnapshot(snapshot: snapshot)
+    static func observe() {
+        DBManager.ref = Database.database().reference()
+        DBManager.ref.observe(.childAdded, with: { snapshot in
+            let friend = DBManager.getFriendFromSnapshot(snapshot: snapshot)
             guard let id = DBManager.me?.id, id != friend.id else { return }
             DBManager.friends.append(friend)
-            self.delegate?.dbManager(friendFound: friend)
-            self.delegate?.dbManager(friendsUpdated: 1)
-            print("DBManager: friendFound", friend)
+            delegates.forEach { (_, delegate) in delegate.dbManager(friendFound: friend) }
+            delegates.forEach { (_, delegate) in delegate.dbManager(friendsUpdated: DBManager.friends.count) }
         })
         
-        ref.observe(.childRemoved, with: { snapshot in
-            let _friend = self.getFriendFromSnapshot(snapshot: snapshot)
+        DBManager.ref.observe(.childRemoved, with: { snapshot in
+            let _friend = DBManager.getFriendFromSnapshot(snapshot: snapshot)
             if let index = DBManager.friends.index(where: { f in f.id == _friend.id }) {
                 let friend = DBManager.friends[index]
                 DBManager.friends.remove(at: index)
-                self.delegate?.dbManager(friendLeft: friend)
-                self.delegate?.dbManager(friendsUpdated: 0)
-                print("DBManager: friendLeft", friend)
+                delegates.forEach { (_, delegate) in delegate.dbManager(friendLeft: friend) }
+                delegates.forEach { (_, delegate) in delegate.dbManager(friendsUpdated: DBManager.friends.count) }
             }
         })
     }
     
-    private func getFriendFromSnapshot(snapshot: DataSnapshot) -> Friend {
+    private static func getFriendFromSnapshot(snapshot: DataSnapshot) -> Friend {
         let userDict = snapshot.value as! [String : String]
         
         let key = snapshot.key

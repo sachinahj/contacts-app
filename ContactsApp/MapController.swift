@@ -11,7 +11,6 @@ import GoogleMaps
 
 class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
-    var dbManager: DBManager = DBManager()
     var me: Me?
     var mapView: GMSMapView!
     var myLocationFound: Bool!
@@ -48,7 +47,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         myLocationFound = false
         
         mapView.delegate = self
-        dbManager.delegate = self
+        DBManager.delegates["MapController"] = self
         
         view = mapView
     }
@@ -61,7 +60,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
             DBManager.me!.marker?.map = nil
             DBManager.me!.range?.map = nil
             
-            dbManager.updateMe(coordinate: coordinate)
+            DBManager.updateMe(coordinate: coordinate)
             markUser(user: DBManager.me!, color: UIColor.blue)
             markRange(me: DBManager.me!, color: UIColor.blue, completion: {_ in self.isLoading = false })
         }
@@ -140,9 +139,8 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
     deinit {
         print("MapController: deinit")
-        dbManager.removeMe()
+        DBManager.removeMe()
         removeMyLocationObserver()
     }
     
 }
-

@@ -10,8 +10,6 @@ import UIKit
 
 class ChatController: UIViewController, DBManagerDelegate {
 
-    var dbManager: DBManager = DBManager()
-
     @IBOutlet weak var chatTextField: UITextField!
     @IBOutlet weak var sendButton: UIButton!
     
@@ -20,12 +18,11 @@ class ChatController: UIViewController, DBManagerDelegate {
         print("ChatController")
         
         self.title = "\(DBManager.friends.count) people"
-        
-        dbManager.delegate = self
+        DBManager.delegates["ChatController"] = self
     }
     
-    func dbManager(friendsUpdated: Int) {
-        print(DBManager.friends.count)
+    func dbManager(friendsUpdated count: Int) {
+        self.title = "\(count) people"
     }
     
     @IBAction func chatTextFieldChanged(_ sender: UITextField) {
@@ -34,6 +31,10 @@ class ChatController: UIViewController, DBManagerDelegate {
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         print("sendButtonPressed")
+    }
+    
+    deinit {
+        print("ChatController: deinit")
     }
     
 }
