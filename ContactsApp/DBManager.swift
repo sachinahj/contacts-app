@@ -36,72 +36,73 @@ class DBManager {
     
     
     static func createMe(username: String) {
-        DBManager.me = Me(username: username)
+        me = Me(username: username)
     }
     
     static func updateMe(coordinate: CLLocationCoordinate2D) {
-        DBManager.removeMe()
-        DBManager.ref = Database.database().reference()
+        removeMe()
+        ref = Database.database().reference()
         
-        let key = DBManager.ref.childByAutoId().key
-        DBManager.me!.id = key
-        DBManager.me!.coordinate = coordinate
+        let key = ref.childByAutoId().key
+        me!.id = key
+        me!.coordinate = coordinate
         
-        let updates = ["/users/\(DBManager.me!.id)": DBManager.me!.toJson()]
-        DBManager.ref.updateChildValues(updates)
+        let updates = ["/users/\(me!.id)": me!.toJson()]
+        ref.updateChildValues(updates)
         
-        DBManager.observe()
+        observe()
     }
     
     static func sendMessage(message: Message) {
-        let key = DBManager.ref.childByAutoId().key
-        var updates = ["/messages/\(DBManager.me!.id)/\(key)": message.toJson()]
-        DBManager.friends.forEach { friend in updates["/messages/\(friend.id)/\(key)"] = message.toJson() }
+        let key = ref.childByAutoId().key
+        var updates = ["/messages/\(me!.id)/\(key)": message.toJson()]
+        friends.forEach { friend in updates["/messages/\(friend.id)/\(key)"] = message.toJson() }
         
-        DBManager.ref = Database.database().reference()
-        DBManager.ref.updateChildValues(updates)
+        ref = Database.database().reference()
+        ref.updateChildValues(updates)
     }
     
     static func removeMe() {
-        DBManager.ref = Database.database().reference()
-        if let me = DBManager.me, me.id != "" {
-            DBManager.ref.child("users").child(me.id).removeValue()
-            DBManager.ref.child("messages").child(me.id).removeValue()
+        ref = Database.database().reference()
+        if let me = me, me.id != "" {
+            ref.child("users").child(me.id).removeValue()
+            ref.child("messages").child(me.id).removeValue()
         }
-        DBManager.ref.child("users").removeAllObservers()
-        DBManager.ref.child("messages").removeAllObservers()
-        DBManager.friends = []
-        DBManager.messages = []
+        ref.child("users").removeAllObservers()
+        ref.child("messages").removeAllObservers()
+        friends = []
+        messages = []
     }
     
     static func observe() {
-        DBManager.ref = Database.database().reference()
-        DBManager.ref.child("users").observe(.childAdded, with: { snapshot in
-            let friend = DBManager.getFriendFromSnapshot(snapshot: snapshot)
-            guard let id = DBManager.me?.id, id != friend.id else { return }
-            DBManager.friends.append(friend)
-            DBManager.delegateMap?.dbManager(friendFound: friend)
-            DBManager.delegateChat?.dbManager(friendsUpdated: DBManager.friends.count)
+        ref = Database.database().reference()
+        ref.child("users").observe(.childAdded, with: { snapshot in
+            let friend = getFriendFromSnapshot(snapshot: snapshot)
+            guard let id = me?.id, id != friend.id else { return }
+            guard isFriendInRange(friend: friend) else { return }
+            friends.append(friend)
+            delegateMap?.dbManager(friendFound: friend)
+            delegateChat?.dbManager(friendsUpdated: friends.count)
         })
         
-        DBManager.ref.child("users").observe(.childRemoved, with: { snapshot in
-            let _friend = DBManager.getFriendFromSnapshot(snapshot: snapshot)
-            if let index = DBManager.friends.index(where: { f in f.id == _friend.id }) {
-                let friend = DBManager.friends[index]
-                DBManager.friends.remove(at: index)
-                DBManager.delegateMap?.dbManager(friendLeft: friend)
-                DBManager.delegateChat?.dbManager(friendsUpdated: DBManager.friends.count)
+        ref.child("users").observe(.childRemoved, with: { snapshot in
+            let _friend = getFriendFromSnapshot(snapshot: snapshot)
+            if let index = friends.index(where: { f in f.id == _friend.id }) {
+                let friend = friends[index]
+                friends.remove(at: index)
+                delegateMap?.dbManager(friendLeft: friend)
+                delegateChat?.dbManager(friendsUpdated: friends.count)
             }
         })
         
-        DBManager.ref.child("messages").child(DBManager.me!.id).observe(.childAdded, with: { snapshot in
+        ref.child("messages").child(me!.id).observe(.childAdded, with: { snapshot in
             let messageDict = snapshot.value as! [String : String]
             let message = Message(
                 username: messageDict["username"]!,
                 text: messageDict["text"]!
             )
-            DBManager.messages.append(message)
-            DBManager.delegateChat?.dbManager(messagesUpdated: DBManager.messages)
+            messages.append(message)
+            delegateChat?.dbManager(messagesUpdated: messages)
         })
     }
     
@@ -120,6 +121,22 @@ class DBManager {
         )
         
         return friend
+    }
+    
+    private static func isFriendInRange(friend: Friend) -> Bool {
+        let lat1 = me!.coordinate.latitude.degreesToRadians
+        let lon1 = me!.coordinate.longitude.degreesToRadians
+        let lat2 = friend.coordinate.latitude.degreesToRadians
+        let lon2 = friend.coordinate.longitude.degreesToRadians
+        
+        let latDelta = lat2 - lat1
+        let lonDelta = lon2 - lon1
+        
+        let a = pow(sin(latDelta / 2), 2) + cos(lat1) * cos(lat2) *  pow(sin(lonDelta / 2), 2)
+        let c = 2 * asin(min(1, sqrt(a)))
+        let d = 6371000 * c
+        
+        return d <= 1000
     }
     
     deinit {
