@@ -11,12 +11,16 @@ import FirebaseDatabase
 import GoogleMaps
 
 protocol DBManagerDelegate: class {
+    func dbManager(friendFound: Friend)
+    func dbManager(friendLeft: Friend)
+    func dbManager(friendsUpdated: Int)
 }
 
-extension DBManagerDelegate {
+extension  DBManagerDelegate {
     func dbManager(friendFound: Friend) {}
     func dbManager(friendLeft: Friend) {}
     func dbManager(friendsUpdated: Int) {}
+
 }
 
 class DBManager {
@@ -60,6 +64,7 @@ class DBManager {
             DBManager.friends.append(friend)
             self.delegate?.dbManager(friendFound: friend)
             self.delegate?.dbManager(friendsUpdated: 1)
+            print("DBManager: friendFound", friend)
         })
         
         ref.observe(.childRemoved, with: { snapshot in
@@ -69,6 +74,7 @@ class DBManager {
                 DBManager.friends.remove(at: index)
                 self.delegate?.dbManager(friendLeft: friend)
                 self.delegate?.dbManager(friendsUpdated: 0)
+                print("DBManager: friendLeft", friend)
             }
         })
     }
