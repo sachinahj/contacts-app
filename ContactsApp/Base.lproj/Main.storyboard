@@ -122,11 +122,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nbO-om-B87">
-                                <rect key="frame" x="167" y="353" width="80" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nbO-om-B87">
+                                <rect key="frame" x="107" y="243" width="200" height="50"/>
                                 <color key="backgroundColor" red="0.74901960784313726" green="0.75294117647058822" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="xFb-nE-cBX"/>
+                                    <constraint firstAttribute="height" constant="50" id="Q1z-5V-GU1"/>
+                                    <constraint firstAttribute="width" constant="200" id="f1Y-RV-nfC"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
                                 <state key="normal" title="Send">
@@ -136,20 +137,25 @@
                                     <action selector="sendButtonPressed:" destination="KOL-DF-gxM" eventType="touchUpInside" id="t6L-I7-rtf"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6JJ-ez-ZlO">
-                                <rect key="frame" x="60" y="305" width="294" height="40"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6JJ-ez-ZlO">
+                                <rect key="frame" x="20" y="148" width="374" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="rDQ-Yn-QwU"/>
+                                    <constraint firstAttribute="height" constant="40" id="e8T-om-OEW"/>
                                 </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="chatTextFieldChanged:" destination="KOL-DF-gxM" eventType="editingDidEnd" id="TSM-6g-sc5"/>
-                                </connections>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="6JJ-ez-ZlO" secondAttribute="trailing" id="6lF-Uz-Pny"/>
+                            <constraint firstItem="nbO-om-B87" firstAttribute="centerY" secondItem="FXX-tY-V7L" secondAttribute="centerY" constant="-100" id="eap-wq-gRx"/>
+                            <constraint firstItem="6JJ-ez-ZlO" firstAttribute="leading" secondItem="FXX-tY-V7L" secondAttribute="leadingMargin" id="gVw-hg-87n"/>
+                            <constraint firstItem="6JJ-ez-ZlO" firstAttribute="centerX" secondItem="FXX-tY-V7L" secondAttribute="centerX" id="hVH-CB-IDe"/>
+                            <constraint firstItem="6JJ-ez-ZlO" firstAttribute="centerY" secondItem="FXX-tY-V7L" secondAttribute="centerY" constant="-200" id="ngV-tD-BIo"/>
+                            <constraint firstItem="nbO-om-B87" firstAttribute="centerX" secondItem="FXX-tY-V7L" secondAttribute="centerX" id="rCe-qg-hW1"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ETy-Sw-uP0">
                         <barButtonItem key="backBarButtonItem" title="Back" id="jM7-wy-h80"/>

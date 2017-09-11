@@ -12,12 +12,15 @@ class ChatController: UIViewController, DBManagerDelegate {
 
     @IBOutlet weak var chatTextField: UITextField!
     @IBOutlet weak var sendButton: UIButton!
+    var messages: [Message] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("ChatController")
         
         self.title = "\(DBManager.friends.count) people"
+        self.messages = DBManager.messages
+        
         DBManager.delegateChat = self
     }
     
@@ -25,12 +28,20 @@ class ChatController: UIViewController, DBManagerDelegate {
         self.title = "\(count) people"
     }
     
-    @IBAction func chatTextFieldChanged(_ sender: UITextField) {
-        print("chatTextFieldChanged")
+    func dbManager(messagesUpdated messages: [Message]) {
+        print("ChatController: messagesUpdated", messages.count)
+        self.messages = messages
     }
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         print("sendButtonPressed")
+        if let text = chatTextField.text, text != "" {
+            let message = Message(username: DBManager.me!.username, text: text)
+            chatTextField.text = ""
+            DBManager.sendMessage(message: message)
+        } else {
+            chatTextField.shake()
+        }
     }
     
     deinit {

@@ -11,7 +11,6 @@ import GoogleMaps
 
 class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
-    var me: Me?
     var mapView: GMSMapView!
     var myLocationFound: Bool!
     var chatButton: UIBarButtonItem = UIBarButtonItem()
