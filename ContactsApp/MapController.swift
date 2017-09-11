@@ -47,7 +47,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         myLocationFound = false
         
         mapView.delegate = self
-        DBManager.delegates["MapController"] = self
+        DBManager.delegateMap = self
         
         view = mapView
     }
@@ -61,8 +61,8 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
             DBManager.me!.range?.map = nil
             
             DBManager.updateMe(coordinate: coordinate)
-            markUser(user: DBManager.me!, color: UIColor.blue)
-            markRange(me: DBManager.me!, color: UIColor.blue, completion: {_ in self.isLoading = false })
+            markUser(user: DBManager.me!, color: UIColor.black)
+            markRange(me: DBManager.me!, color: UIColor.black, completion: {_ in self.isLoading = false })
         }
     }
     

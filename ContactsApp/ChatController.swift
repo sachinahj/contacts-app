@@ -18,7 +18,7 @@ class ChatController: UIViewController, DBManagerDelegate {
         print("ChatController")
         
         self.title = "\(DBManager.friends.count) people"
-        DBManager.delegates["ChatController"] = self
+        DBManager.delegateChat = self
     }
     
     func dbManager(friendsUpdated count: Int) {

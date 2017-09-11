@@ -29,7 +29,9 @@ class DBManager {
     static var friends: [Friend] = []
     
     static var ref: DatabaseReference!
-    static var delegates: [String: DBManagerDelegate] = [:]
+    static weak var delegateMap: DBManagerDelegate?
+    static weak var delegateChat: DBManagerDelegate?
+    
     
     static func createMe(username: String) {
         DBManager.me = Me(username: username)
@@ -46,7 +48,7 @@ class DBManager {
         let updates = ["/\(DBManager.me!.id)": DBManager.me!.toJson()]
         DBManager.ref.updateChildValues(updates)
         
-        self.observe()
+        DBManager.observe()
     }
     
     static func removeMe() {
@@ -62,8 +64,8 @@ class DBManager {
             let friend = DBManager.getFriendFromSnapshot(snapshot: snapshot)
             guard let id = DBManager.me?.id, id != friend.id else { return }
             DBManager.friends.append(friend)
-            delegates.forEach { (_, delegate) in delegate.dbManager(friendFound: friend) }
-            delegates.forEach { (_, delegate) in delegate.dbManager(friendsUpdated: DBManager.friends.count) }
+            DBManager.delegateMap?.dbManager(friendFound: friend)
+            DBManager.delegateChat?.dbManager(friendsUpdated: DBManager.friends.count)
         })
         
         DBManager.ref.observe(.childRemoved, with: { snapshot in
@@ -71,8 +73,8 @@ class DBManager {
             if let index = DBManager.friends.index(where: { f in f.id == _friend.id }) {
                 let friend = DBManager.friends[index]
                 DBManager.friends.remove(at: index)
-                delegates.forEach { (_, delegate) in delegate.dbManager(friendLeft: friend) }
-                delegates.forEach { (_, delegate) in delegate.dbManager(friendsUpdated: DBManager.friends.count) }
+                DBManager.delegateMap?.dbManager(friendLeft: friend)
+                DBManager.delegateChat?.dbManager(friendsUpdated: DBManager.friends.count)
             }
         })
     }
