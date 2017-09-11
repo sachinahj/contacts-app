@@ -66,13 +66,13 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     }
     
     func dbManager(friendFound: Friend) {
-        print("MapController: friendFound", friendFound)
+        print("MapController: friendFound")
         markUser(user: friendFound, color: UIColor.red)
         updateChatCount()
     }
     
     func dbManager(friendLeft: Friend) {
-        print("MapController: friendLeft", friendLeft)
+        print("MapController: friendLeft")
         friendLeft.marker?.map = nil
         updateChatCount()
     }

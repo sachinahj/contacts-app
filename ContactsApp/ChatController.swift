@@ -34,7 +34,6 @@ class ChatController: UIViewController, DBManagerDelegate {
     }
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
-        print("sendButtonPressed")
         if let text = chatTextField.text, text != "" {
             let message = Message(username: DBManager.me!.username, text: text)
             chatTextField.text = ""
