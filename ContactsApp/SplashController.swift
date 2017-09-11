@@ -11,39 +11,36 @@ import UIKit
 class SplashController: UIViewController {
 
     var dbManager: DBManager = DBManager()
-    @IBOutlet weak var usernameField: UITextField!
-    @IBOutlet weak var jumpIn: UIButton!
+    @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet weak var jumpInButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Enter a Username"
-        jumpIn.layer.cornerRadius = 10.0
-        jumpIn.clipsToBounds = true
+        jumpInButton.layer.cornerRadius = 10.0
+        jumpInButton.clipsToBounds = true
     }
     
-    @IBAction func usernameFieldOnChange(_ sender: UITextField) {
-        if usernameField.text! != "" {
-            self.title = "Hello \(usernameField.text!)!"
+    @IBAction func usernameTextFieldOnChange(_ sender: UITextField) {
+        if usernameTextField.text! != "" {
+            self.title = "Hello \(usernameTextField.text!)!"
         } else {
             self.title = "Enter a Username"
         }
     }
     
-    @IBAction func jumpInOnClick(_ sender: UIButton) {
-        if usernameField.text! != "" {
+    @IBAction func onClickJumpInButton(_ sender: UIButton) {
+        if usernameTextField.text! != "" {
             view.endEditing(true)
-            let username = usernameField.text?.trimmingCharacters(in: .whitespaces)
+            let username = usernameTextField.text?.trimmingCharacters(in: .whitespaces)
             dbManager.createMe(username: username!)
             performSegue(withIdentifier: "goToMap", sender: self)
         } else {
-            usernameField.shake()
+            usernameTextField.shake()
         }
     }
-
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "goToMap" {
-//            let destinationVC = segue.destination as! MapController
-//            destinationVC.username = username
-//        }
-//    }
+    
+    deinit {
+        print("SplashController: deinit")
+    }
 }

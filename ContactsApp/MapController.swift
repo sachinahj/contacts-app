@@ -12,19 +12,18 @@ import GoogleMaps
 class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
     var dbManager: DBManager!
-    
+    var me: Me?
     var mapView: GMSMapView!
     var myLocationFound: Bool!
-    
-    var me: Me?
-    var friends: [Friend] = []
-    
+    var chatButton: UIBarButtonItem = UIBarButtonItem()
     var isLoading: Bool = false {
         didSet {
             if isLoading {
                 self.title = "Loading..."
+                self.navigationItem.rightBarButtonItem?.isEnabled = false
             } else {
                 self.title = "Tap Hangout Location"
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
         }
     }
@@ -34,6 +33,10 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         print("MapController")
         
         self.title = "Tap Hangout Location"
+        self.navigationItem.rightBarButtonItem = nil
+        
+        chatButton.target = self
+        chatButton.action = #selector(chatButtonPressed)
         
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 1.0)
         mapView = GMSMapView.map(withFrame: view.bounds, camera: camera)
@@ -54,23 +57,39 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         if isLoading == false {
             isLoading = true
-            resetFriends()
+            unmarkAllFriends()
             let me = dbManager.updateMe(coordinate: coordinate)
             markMe(me: me, completion: {_ in self.isLoading = false})
         }
     }
     
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        print(marker)
+        return false
+    }
+    
     func dbManager(friendFound: Friend) {
-        guard let id = me?.id, id != friendFound.id else { return }
         markFriend(friend: friendFound)
-        friends.append(friendFound)
+        updateChatCount()
     }
     
     func dbManager(friendLeft: Friend) {
-        print("friendLeft", friendLeft)
-        if let index = friends.index(where: { friend in friend.id == friendLeft.id }) {
-            friends[index].marker?.map = nil
+        friendLeft.marker?.map = nil
+        updateChatCount()
+    }
+    
+    func updateChatCount() {
+        print("DBManager.friends.count", DBManager.friends.count)
+        chatButton.title = "Chat (\(DBManager.friends.count)) >"
+        if DBManager.friends.count > 0 {
+            self.navigationItem.rightBarButtonItem = chatButton
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
         }
+    }
+    
+    func chatButtonPressed(sender: UIButton!) {
+        performSegue(withIdentifier: "goToChat", sender: self)
     }
     
     func markMe(me _me: Me, completion: @escaping () -> Void) {
@@ -81,24 +100,23 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         me = _me
     }
     
-    func markFriend(friend user: Friend) {
-        markUser(user: user, color: UIColor.red)
+    func markFriend(friend: Friend) {
+        markUser(user: friend, color: UIColor.red)
     }
     
-    func resetFriends() {
-        friends.forEach({ friend in friend.marker?.map = nil })
-        friends = []
+    func unmarkAllFriends() {
+        DBManager.friends.forEach({ friend in friend.marker?.map = nil })
     }
     
     func markUser(user: User, color: UIColor) {
         let timeline = [(0.05, 5.0),(0.1, 10.0),(0.15, 15.0),(0.2, 20.0),(0.25, 25.0),(0.3, 20.0),(0.35, 15.0),(0.4, 10.0),(0.45, 15.0),(0.5, 25.0)]
-        
-        animateMarker(coordinate: user.coordinate, timeline: timeline, strokeColor: color, fillColor: color, completion: { marker in user.marker = marker })
+        animateMarker(coordinate: user.coordinate, timeline: timeline, strokeColor: color, fillColor: color, completion: { marker in
+            user.marker = marker
+        })
     }
     
     func markMeRange(me: Me, color: UIColor, completion: @escaping () -> Void) {
         let timeline = [(0.1, 100.0),(0.1, 200.0),(0.3, 300.0),(0.4, 400.0),(0.5, 500.0),(0.6, 600.0),(0.7, 700.0),(0.8, 800.0),(0.9, 900.0),(1.0, 1000.0)]
-        
         animateMarker(coordinate: me.coordinate, timeline: timeline, strokeColor: color, fillColor: nil, completion: { marker in
             me.range = marker
             completion()
@@ -118,9 +136,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
                 if let color = fillColor { marker!.fillColor = color }
                 marker!.map = self.mapView
                 
-                if i == timeline.count - 1 {
-                    completion(marker!)
-                }
+                if i == timeline.count - 1 { completion(marker!) }
             }
         }
     }

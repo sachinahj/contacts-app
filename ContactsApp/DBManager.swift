@@ -18,6 +18,7 @@ protocol DBManagerDelegate: NSObjectProtocol {
 class DBManager {
     static var username: String?
     static var me: Me?
+    static var friends: [Friend] = []
     
     var ref: DatabaseReference!
     weak var delegate: DBManagerDelegate?
@@ -44,22 +45,27 @@ class DBManager {
     
     func removeMe() {
         ref = Database.database().reference()
+        if let me = DBManager.me, me.id != "" { ref.child(me.id).removeValue() }
         ref.removeAllObservers()
-        if let me = DBManager.me, me.id != "" {
-            ref.child(me.id).removeValue()
-        }
+        DBManager.friends = []
     }
     
     func observe() {
         ref = Database.database().reference()
         ref.observe(.childAdded, with: { snapshot in
             let friend = self.getFriendFromSnapshot(snapshot: snapshot)
+            guard let id = DBManager.me?.id, id != friend.id else { return }
+            DBManager.friends.append(friend)
             self.delegate?.dbManager(friendFound: friend)
         })
         
         ref.observe(.childRemoved, with: { snapshot in
-            let friend = self.getFriendFromSnapshot(snapshot: snapshot)
-            self.delegate?.dbManager(friendLeft: friend)
+            let _friend = self.getFriendFromSnapshot(snapshot: snapshot)
+            if let index = DBManager.friends.index(where: { f in f.id == _friend.id }) {
+                let friend = DBManager.friends[index]
+                DBManager.friends.remove(at: index)
+                self.delegate?.dbManager(friendLeft: friend)
+            }
         })
     }
     

@@ -23,8 +23,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R7c-dv-lbh">
-                                <rect key="frame" x="70" y="350.66666666666669" width="274" height="36"/>
+                                <rect key="frame" x="70" y="331.33333333333331" width="274" height="75"/>
                                 <color key="backgroundColor" red="0.1764705882352941" green="0.19215686274509802" blue="0.25882352941176467" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="75" id="Oa9-cK-qP2"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -41,7 +44,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="jumpInOnClick:" destination="8fP-OV-xQs" eventType="touchUpInside" id="GRp-HY-PKA"/>
+                                    <action selector="onClickJumpInButton:" destination="8fP-OV-xQs" eventType="touchUpInside" id="O2a-c0-1dg"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Sachin" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Coe-X5-wea">
@@ -54,7 +57,7 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="25"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                 <connections>
-                                    <action selector="usernameFieldOnChange:" destination="8fP-OV-xQs" eventType="editingChanged" id="LrS-2x-reD"/>
+                                    <action selector="usernameTextFieldOnChange:" destination="8fP-OV-xQs" eventType="editingChanged" id="Rd6-oX-pcn"/>
                                 </connections>
                             </textField>
                         </subviews>
@@ -74,9 +77,9 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="vKY-oA-emi"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="jumpIn" destination="R7c-dv-lbh" id="bdE-rE-1lA"/>
-                        <outlet property="usernameField" destination="Coe-X5-wea" id="TI9-GF-hKg"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="goToMap" id="7sc-zV-vrj"/>
+                        <outlet property="jumpInButton" destination="R7c-dv-lbh" id="7e2-Cb-KDb"/>
+                        <outlet property="usernameTextField" destination="Coe-X5-wea" id="Wq9-bA-P3H"/>
+                        <segue destination="BYZ-38-t0r" kind="showDetail" identifier="goToMap" action="showViewController:sender:" id="7sc-zV-vrj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rbf-aS-USM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -96,10 +99,34 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
+                    <navigationItem key="navigationItem" id="sTg-eb-JPg">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="6r3-C2-snZ"/>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="KOL-DF-gxM" kind="show" identifier="goToChat" id="YuG-fW-yDT"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1260" y="-7.6461769115442282"/>
+        </scene>
+        <!--Chat Controller-->
+        <scene sceneID="3Q9-rY-BSn">
+            <objects>
+                <viewController id="KOL-DF-gxM" customClass="ChatController" customModule="ContactsApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Tow-JT-TJ6"/>
+                        <viewControllerLayoutGuide type="bottom" id="YNw-bl-zRI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="FXX-tY-V7L">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5NG-8d-R2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2077" y="-8"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OB4-lh-pEJ">
