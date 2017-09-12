@@ -10,7 +10,7 @@ import UIKit
 import SlackTextViewController
 
 class ChatController: SLKTextViewController, DBManagerDelegate {
-   
+    
     override var tableView: UITableView {
         get { return super.tableView! }
     }
@@ -24,8 +24,8 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
         self.tableView.separatorStyle = .none
         self.textView.placeholder = "Message"
         
-        DBManager.delegateChat = self
         self.tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: "MessageTableViewCell")
+        DBManager.delegateChat = self
     }
     
     func dbManager(friendsUpdated count: Int) {
@@ -34,6 +34,7 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
     
     func dbManager(messagesUpdated messages: [Message]) {
         print("ChatController: messagesUpdated", messages.count)
+        self.tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -19,6 +19,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
             if isLoading {
                 self.title = "Loading..."
                 self.navigationItem.rightBarButtonItem?.isEnabled = false
+                
             } else {
                 self.title = "Tap Hangout Location"
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
@@ -54,14 +55,17 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         if isLoading == false {
             isLoading = true
-            
             DBManager.friends.forEach({ friend in friend.marker?.map = nil })
             DBManager.me!.marker?.map = nil
             DBManager.me!.range?.map = nil
-            
+            DBManager.removeMe()
             DBManager.updateMe(coordinate: coordinate)
             markUser(user: DBManager.me!, color: UIColor.black)
-            markRange(me: DBManager.me!, color: UIColor.black, completion: {_ in self.isLoading = false })
+            markRange(me: DBManager.me!, color: UIColor.black, completion: {_ in
+                self.isLoading = false
+                self.updateChatCount()
+                DBManager.observe()
+            })
         }
     }
     

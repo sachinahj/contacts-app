@@ -40,7 +40,6 @@ class DBManager {
     }
     
     static func updateMe(coordinate: CLLocationCoordinate2D) {
-        removeMe()
         ref = Database.database().reference()
         
         let key = ref.childByAutoId().key
@@ -48,17 +47,6 @@ class DBManager {
         me!.coordinate = coordinate
         
         let updates = ["/users/\(me!.id)": me!.toJson()]
-        ref.updateChildValues(updates)
-        
-        observe()
-    }
-    
-    static func sendMessage(message: Message) {
-        let key = ref.childByAutoId().key
-        var updates = ["/messages/\(me!.id)/\(key)": message.toJson()]
-        friends.forEach { friend in updates["/messages/\(friend.id)/\(key)"] = message.toJson() }
-        
-        ref = Database.database().reference()
         ref.updateChildValues(updates)
     }
     
@@ -72,6 +60,15 @@ class DBManager {
         ref.child("messages").removeAllObservers()
         friends = []
         messages = []
+    }
+    
+    static func sendMessage(message: Message) {
+        let key = ref.childByAutoId().key
+        var updates = ["/messages/\(me!.id)/\(key)": message.toJson()]
+        friends.forEach { friend in updates["/messages/\(friend.id)/\(key)"] = message.toJson() }
+        
+        ref = Database.database().reference()
+        ref.updateChildValues(updates)
     }
     
     static func observe() {
