@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0315BD531F6604E500E01782 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0315BD521F6604E500E01782 /* ChatController.swift */; };
-		033193941F6234FC000658D8 /* ExtensionsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033193931F6234FC000658D8 /* ExtensionsUI.swift */; };
+		033193941F6234FC000658D8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033193931F6234FC000658D8 /* Extensions.swift */; };
 		037039F71F61DD6B007CD1C6 /* SplashController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037039F61F61DD6B007CD1C6 /* SplashController.swift */; };
 		037221DA1F628378002E69A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 037221D91F628378002E69A7 /* GoogleService-Info.plist */; };
 		03AE19451F6298D000378148 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE19441F6298D000378148 /* User.swift */; };
@@ -25,7 +25,7 @@
 
 /* Begin PBXFileReference section */
 		0315BD521F6604E500E01782 /* ChatController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
-		033193931F6234FC000658D8 /* ExtensionsUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionsUI.swift; sourceTree = "<group>"; };
+		033193931F6234FC000658D8 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		037039F61F61DD6B007CD1C6 /* SplashController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashController.swift; sourceTree = "<group>"; };
 		037221D91F628378002E69A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		03AE19441F6298D000378148 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -56,6 +56,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03B425C11F678A2C00C92376 /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				03AE19441F6298D000378148 /* User.swift */,
+				AB2F73EF1F671D430004256D /* Message.swift */,
+				03D1AD351F6250F400306F94 /* DBManager.swift */,
+				AB1F91901F6757D900269500 /* MessageTableViewCell.swift */,
+			);
+			name = Collections;
+			sourceTree = "<group>";
+		};
+		03B425C21F678A4900C92376 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				037039F61F61DD6B007CD1C6 /* SplashController.swift */,
+				03BA06041F5C887800956BD6 /* MapController.swift */,
+				0315BD521F6604E500E01782 /* ChatController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
 		03BA05F61F5C887800956BD6 = {
 			isa = PBXGroup;
 			children = (
@@ -78,19 +99,14 @@
 			isa = PBXGroup;
 			children = (
 				03BA06021F5C887800956BD6 /* AppDelegate.swift */,
-				03AE19441F6298D000378148 /* User.swift */,
-				AB2F73EF1F671D430004256D /* Message.swift */,
-				03D1AD351F6250F400306F94 /* DBManager.swift */,
-				037039F61F61DD6B007CD1C6 /* SplashController.swift */,
-				03BA06041F5C887800956BD6 /* MapController.swift */,
-				0315BD521F6604E500E01782 /* ChatController.swift */,
-				033193931F6234FC000658D8 /* ExtensionsUI.swift */,
+				03B425C11F678A2C00C92376 /* Collections */,
+				03B425C21F678A4900C92376 /* Controllers */,
+				033193931F6234FC000658D8 /* Extensions.swift */,
 				03BA06061F5C887800956BD6 /* Main.storyboard */,
 				03BA060B1F5C887800956BD6 /* LaunchScreen.storyboard */,
 				03BA06091F5C887800956BD6 /* Assets.xcassets */,
 				037221D91F628378002E69A7 /* GoogleService-Info.plist */,
 				03BA060E1F5C887800956BD6 /* Info.plist */,
-				AB1F91901F6757D900269500 /* MessageTableViewCell.swift */,
 			);
 			path = ContactsApp;
 			sourceTree = "<group>";
@@ -256,7 +272,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				033193941F6234FC000658D8 /* ExtensionsUI.swift in Sources */,
+				033193941F6234FC000658D8 /* Extensions.swift in Sources */,
 				03D1AD361F6250F400306F94 /* DBManager.swift in Sources */,
 				AB1F91911F6757D900269500 /* MessageTableViewCell.swift in Sources */,
 				0315BD531F6604E500E01782 /* ChatController.swift in Sources */,

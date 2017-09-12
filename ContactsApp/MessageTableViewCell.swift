@@ -21,7 +21,6 @@ class MessageTableViewCell: UITableViewCell {
     lazy var bodyLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .body)
-
         label.numberOfLines = 0
         return label
     }()
@@ -43,14 +42,14 @@ class MessageTableViewCell: UITableViewCell {
         nameLabel.snp.makeConstraints { (make) -> Void in
             make.top.equalTo(self).offset(10)
             make.left.equalTo(self).offset(20)
-            make.right.equalTo(self).offset(20)
+            make.right.equalTo(self).offset(-20)
         }
         
         bodyLabel.snp.makeConstraints { (make) -> Void in
             make.top.equalTo(nameLabel.snp.bottom).offset(1)
             make.left.equalTo(self).offset(20)
-            make.right.equalTo(self).offset(20)
-            make.bottom.equalTo(self).offset(10)
+            make.right.equalTo(self).offset(-20)
+            make.bottom.equalTo(self).offset(-10)
         }
     }
 }

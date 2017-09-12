@@ -76,10 +76,11 @@ class DBManager {
         ref.child("users").observe(.childAdded, with: { snapshot in
             let friend = getFriendFromSnapshot(snapshot: snapshot)
             guard let id = me?.id, id != friend.id else { return }
-            guard isFriendInRange(friend: friend) else { return }
-            friends.append(friend)
-            delegateMap?.dbManager(friendFound: friend)
-            delegateChat?.dbManager(friendsUpdated: friends.count)
+            if isFriendInRange(friend: friend) {
+                friends.append(friend)
+                delegateMap?.dbManager(friendFound: friend)
+                delegateChat?.dbManager(friendsUpdated: friends.count)
+            }
         })
         
         ref.child("users").observe(.childRemoved, with: { snapshot in

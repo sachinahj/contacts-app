@@ -24,6 +24,8 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
         self.tableView.separatorStyle = .none
         self.textView.placeholder = "Message"
         
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 500.0
         self.tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: "MessageTableViewCell")
         DBManager.delegateChat = self
     }
@@ -35,6 +37,7 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
     func dbManager(messagesUpdated messages: [Message]) {
         print("ChatController: messagesUpdated", messages.count)
         self.tableView.reloadData()
+        self.tableView.scrollToRow(at: IndexPath(row: messages.count - 1, section: 0), at: .bottom, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
