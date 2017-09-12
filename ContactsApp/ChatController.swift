@@ -58,8 +58,7 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
     
     override func didPressRightButton(_ sender: Any!) {
         self.textView.refreshFirstResponder()
-        let message = Message(username: DBManager.me!.username, text:  self.textView.text)
-        DBManager.sendMessage(message: message)
+        DBManager.sendMessage(text: self.textView.text)
         super.didPressRightButton(sender)
     }
     

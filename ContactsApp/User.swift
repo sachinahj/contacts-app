@@ -30,9 +30,11 @@ class Me: User {
     }
     
     func toJson() -> [String: String] {
-        return ["username": self.username,
-                "latitude": String(self.coordinate.latitude),
-                "longitude": String(self.coordinate.longitude)]
+        return [
+            "username": self.username,
+            "latitude": String(self.coordinate.latitude),
+            "longitude": String(self.coordinate.longitude)
+        ]
     }
 }
 

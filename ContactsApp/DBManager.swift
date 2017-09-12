@@ -62,11 +62,11 @@ class DBManager {
         messages = []
     }
     
-    static func sendMessage(message: Message) {
+    static func sendMessage(text: String) {
         let key = ref.childByAutoId().key
+        let message = Message(id: key, username: DBManager.me!.username, text:  text)
         var updates = ["/messages/\(me!.id)/\(key)": message.toJson()]
         friends.forEach { friend in updates["/messages/\(friend.id)/\(key)"] = message.toJson() }
-        
         ref = Database.database().reference()
         ref.updateChildValues(updates)
     }
@@ -96,6 +96,7 @@ class DBManager {
         ref.child("messages").child(me!.id).observe(.childAdded, with: { snapshot in
             let messageDict = snapshot.value as! [String : String]
             let message = Message(
+                id: snapshot.key,
                 username: messageDict["username"]!,
                 text: messageDict["text"]!
             )
@@ -106,18 +107,11 @@ class DBManager {
     
     private static func getFriendFromSnapshot(snapshot: DataSnapshot) -> Friend {
         let userDict = snapshot.value as! [String : String]
-        
-        let key = snapshot.key
-        let username = userDict["username"]!
-        let latitude = Double(userDict["latitude"]!)!
-        let longitude = Double(userDict["longitude"]!)!
-        
         let friend = Friend(
-            id: key,
-            username: username,
-            coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            id: snapshot.key,
+            username: userDict["username"]!,
+            coordinate: CLLocationCoordinate2D(latitude: Double(userDict["latitude"]!)!, longitude: Double(userDict["longitude"]!)!)
         )
-        
         return friend
     }
     
