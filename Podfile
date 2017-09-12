@@ -10,5 +10,7 @@ target 'ContactsApp' do
   pod 'GooglePlaces'
   pod 'Firebase/Core'
   pod 'Firebase/Database'
+  pod 'SlackTextViewController'
+  pod 'SnapKit'
 
 end

@@ -7,21 +7,25 @@
 //
 
 import UIKit
+import SlackTextViewController
 
-class ChatController: UIViewController, DBManagerDelegate {
-
-    @IBOutlet weak var chatTextField: UITextField!
-    @IBOutlet weak var sendButton: UIButton!
-    var messages: [Message] = []
+class ChatController: SLKTextViewController, DBManagerDelegate {
+   
+    override var tableView: UITableView {
+        get { return super.tableView! }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("ChatController")
         
         self.title = "\(DBManager.friends.count) people"
-        self.messages = DBManager.messages
+        self.isInverted = false
+        self.tableView.separatorStyle = .none
+        self.textView.placeholder = "Message"
         
         DBManager.delegateChat = self
+        self.tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: "MessageTableViewCell")
     }
     
     func dbManager(friendsUpdated count: Int) {
@@ -30,17 +34,29 @@ class ChatController: UIViewController, DBManagerDelegate {
     
     func dbManager(messagesUpdated messages: [Message]) {
         print("ChatController: messagesUpdated", messages.count)
-        self.messages = messages
     }
     
-    @IBAction func sendButtonPressed(_ sender: UIButton) {
-        if let text = chatTextField.text, text != "" {
-            let message = Message(username: DBManager.me!.username, text: text)
-            chatTextField.text = ""
-            DBManager.sendMessage(message: message)
-        } else {
-            chatTextField.shake()
-        }
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return DBManager.messages.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell") as! MessageTableViewCell
+        let message = DBManager.messages[(indexPath as NSIndexPath).row]
+        
+        cell.nameLabel.text = message.username
+        cell.bodyLabel.text = message.text
+        cell.selectionStyle = .none
+        
+        cell.transform = self.tableView.transform
+        return cell
+    }
+    
+    override func didPressRightButton(_ sender: Any!) {
+        self.textView.refreshFirstResponder()
+        let message = Message(username: DBManager.me!.username, text:  self.textView.text)
+        DBManager.sendMessage(message: message)
+        super.didPressRightButton(sender)
     }
     
     deinit {

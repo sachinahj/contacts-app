@@ -98,7 +98,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     }
     
     func markRange(me: Me, color: UIColor, completion: @escaping () -> Void) {
-        let timeline = [(0.1, 100.0),(0.1, 200.0),(0.3, 300.0),(0.4, 400.0),(0.5, 500.0),(0.6, 600.0),(0.7, 700.0),(0.8, 800.0),(0.9, 900.0),(1.0, 1000.0)]
+        let timeline = [(0.05, 50.0),(0.1, 100.0),(0.15, 150.0),(0.2, 200.0),(0.25, 250.0),(0.3, 300.0),(0.35, 350.0),(0.4, 400.0),(0.45, 450.0),(0.5, 500.0),(0.55, 550.0),(0.6, 600.0),(0.65, 650.0),(0.7, 700.0),(0.75, 750.0),(0.8, 800.0),(0.85, 850.0),(0.9, 900.0),(0.95, 950.0),(1.0, 1000.0)]
         animateMarker(coordinate: me.coordinate, timeline: timeline, strokeColor: color, fillColor: nil, completion: { marker in
             me.range = marker
             completion()

@@ -19,6 +19,7 @@
 		03BA060D1F5C887800956BD6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03BA060B1F5C887800956BD6 /* LaunchScreen.storyboard */; };
 		03D1AD361F6250F400306F94 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D1AD351F6250F400306F94 /* DBManager.swift */; };
 		7E7D37050292F6CE6D2F5F33 /* Pods_ContactsApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4D86B743486AC8D01B41532 /* Pods_ContactsApp.framework */; };
+		AB1F91911F6757D900269500 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1F91901F6757D900269500 /* MessageTableViewCell.swift */; };
 		AB2F73F01F671D430004256D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2F73EF1F671D430004256D /* Message.swift */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		03D1AD351F6250F400306F94 /* DBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
 		8A13DABC4744E001BEC6A5B0 /* Pods-ContactsApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContactsApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ContactsApp/Pods-ContactsApp.debug.xcconfig"; sourceTree = "<group>"; };
 		A4D86B743486AC8D01B41532 /* Pods_ContactsApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ContactsApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB1F91901F6757D900269500 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		AB2F73EF1F671D430004256D /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		E2DB574342F8A47E4A90B5D3 /* Pods-ContactsApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContactsApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-ContactsApp/Pods-ContactsApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,6 +90,7 @@
 				03BA06091F5C887800956BD6 /* Assets.xcassets */,
 				037221D91F628378002E69A7 /* GoogleService-Info.plist */,
 				03BA060E1F5C887800956BD6 /* Info.plist */,
+				AB1F91901F6757D900269500 /* MessageTableViewCell.swift */,
 			);
 			path = ContactsApp;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 					03BA05FE1F5C887800956BD6 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = K55U667G6C;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -227,12 +231,16 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ContactsApp/Pods-ContactsApp-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/SlackTextViewController/SlackTextViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SlackTextViewController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -250,6 +258,7 @@
 			files = (
 				033193941F6234FC000658D8 /* ExtensionsUI.swift in Sources */,
 				03D1AD361F6250F400306F94 /* DBManager.swift in Sources */,
+				AB1F91911F6757D900269500 /* MessageTableViewCell.swift in Sources */,
 				0315BD531F6604E500E01782 /* ChatController.swift in Sources */,
 				037039F71F61DD6B007CD1C6 /* SplashController.swift in Sources */,
 				03BA06051F5C887800956BD6 /* MapController.swift in Sources */,
@@ -379,11 +388,13 @@
 			baseConfigurationReference = 8A13DABC4744E001BEC6A5B0 /* Pods-ContactsApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = K55U667G6C;
 				INFOPLIST_FILE = ContactsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.sachinahuja.ContactsApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -393,6 +404,7 @@
 			baseConfigurationReference = E2DB574342F8A47E4A90B5D3 /* Pods-ContactsApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = K55U667G6C;
 				INFOPLIST_FILE = ContactsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
