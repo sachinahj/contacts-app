@@ -22,6 +22,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
                 
             } else {
                 self.title = "Tap Hangout Location"
+                self.navigationItem.rightBarButtonItem = chatButton
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
         }
@@ -83,11 +84,6 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
     func updateChatCount() {
         chatButton.title = "Chat (\(DBManager.friends.count)) >"
-        if DBManager.friends.count > 0 {
-            self.navigationItem.rightBarButtonItem = chatButton
-        } else {
-            self.navigationItem.rightBarButtonItem = nil
-        }
     }
     
     func chatButtonPressed(sender: UIButton!) {
