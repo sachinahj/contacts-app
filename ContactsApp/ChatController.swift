@@ -58,6 +58,10 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
             cell.nameLabel.textColor = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1.0)
             cell.nameLabel.textAlignment = .right
             cell.bodyLabel.textAlignment = .right
+        } else {
+            cell.nameLabel.textColor = UIColor(red: 0/255.0, green: 128/255.0, blue: 64/255.0, alpha: 1.0)
+            cell.nameLabel.textAlignment = .left
+            cell.bodyLabel.textAlignment = .left
         }
         
         cell.transform = self.tableView.transform
