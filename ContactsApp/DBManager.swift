@@ -64,7 +64,7 @@ class DBManager {
     
     static func sendMessage(text: String) {
         let key = ref.childByAutoId().key
-        let message = Message(id: key, username: DBManager.me!.username, text:  text)
+        let message = Message(id: key, userId: DBManager.me!.id, username: DBManager.me!.username, text:  text)
         var updates = ["/messages/\(me!.id)/\(key)": message.toJson()]
         friends.forEach { friend in updates["/messages/\(friend.id)/\(key)"] = message.toJson() }
         ref = Database.database().reference()
@@ -97,6 +97,7 @@ class DBManager {
             let messageDict = snapshot.value as! [String : String]
             let message = Message(
                 id: snapshot.key,
+                userId: messageDict["userId"]!,
                 username: messageDict["username"]!,
                 text: messageDict["text"]!
             )

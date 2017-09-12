@@ -22,6 +22,7 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
         self.title = "\(DBManager.friends.count) people"
         self.isInverted = false
         self.tableView.separatorStyle = .none
+        self.shouldScrollToBottomAfterKeyboardShows = true
         self.textView.placeholder = "Message"
         
         self.tableView.rowHeight = UITableViewAutomaticDimension
@@ -37,7 +38,8 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
     func dbManager(messagesUpdated messages: [Message]) {
         print("ChatController: messagesUpdated", messages.count)
         self.tableView.reloadData()
-        self.tableView.scrollToRow(at: IndexPath(row: messages.count - 1, section: 0), at: .bottom, animated: true)
+        self.tableView.scrollToRow(at: IndexPath(row: DBManager.messages.count - 1, section: 0), at: .top, animated: true)
+
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -51,6 +53,12 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
         cell.nameLabel.text = message.username
         cell.bodyLabel.text = message.text
         cell.selectionStyle = .none
+        
+        if message.userId == DBManager.me!.id {
+            cell.nameLabel.textColor = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1.0)
+            cell.nameLabel.textAlignment = .right
+            cell.bodyLabel.textAlignment = .right
+        }
         
         cell.transform = self.tableView.transform
         return cell

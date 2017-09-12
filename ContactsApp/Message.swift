@@ -9,19 +9,21 @@
 import Foundation
 
 class Message {
-    let id: String!
-    let username: String!
-    let text: String!
+    var id: String
+    var userId: String
+    var username: String
+    var text: String
     
-    init(id: String, username: String, text: String) {
+    init(id: String, userId: String, username: String, text: String) {
         self.id = id
+        self.userId = userId
         self.username = username
         self.text = text
     }
     
     func toJson() -> [String: String] {
         return [
-            "id" : self.id,
+            "userId" : self.userId,
             "username" : self.username,
             "text": self.text
         ]

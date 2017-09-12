@@ -27,15 +27,7 @@ class MessageTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureSubviews()
-    }
-    
-    // We won’t use this but it’s required for the class to compile
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    func configureSubviews() {
+        
         self.addSubview(self.nameLabel)
         self.addSubview(self.bodyLabel)
         
@@ -51,5 +43,10 @@ class MessageTableViewCell: UITableViewCell {
             make.right.equalTo(self).offset(-20)
             make.bottom.equalTo(self).offset(-10)
         }
+    }
+
+    // We won’t use this but it’s required for the class to compile
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
 }
