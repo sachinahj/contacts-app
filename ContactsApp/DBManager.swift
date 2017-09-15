@@ -52,14 +52,24 @@ class DBManager {
     
     static func removeMe() {
         ref = Database.database().reference()
+        
+        me?.marker?.map = nil
+        me?.range?.map = nil
+        
         if let me = me, me.id != "" {
             ref.child("users").child(me.id).removeValue()
             ref.child("messages").child(me.id).removeValue()
         }
-        ref.child("users").removeAllObservers()
-        ref.child("messages").removeAllObservers()
+        
+        friends.forEach({ friend in friend.marker?.map = nil })
         friends = []
         messages = []
+        
+        ref.child("users").removeAllObservers()
+        ref.child("messages").removeAllObservers()
+    }
+    
+    static func removeAllFriends() {
     }
     
     static func sendMessage(text: String) {
@@ -104,18 +114,18 @@ class DBManager {
             messages.append(message)
             delegateChat?.dbManager(messagesUpdated: messages)
         })
-    }
     
-    private static func getFriendFromSnapshot(snapshot: DataSnapshot) -> Friend {
-        let userDict = snapshot.value as! [String : String]
-        let friend = Friend(
-            id: snapshot.key,
-            username: userDict["username"]!,
-            coordinate: CLLocationCoordinate2D(latitude: Double(userDict["latitude"]!)!, longitude: Double(userDict["longitude"]!)!)
-        )
-        return friend
-    }
     
+        func getFriendFromSnapshot(snapshot: DataSnapshot) -> Friend {
+            let userDict = snapshot.value as! [String : String]
+            let friend = Friend(
+                id: snapshot.key,
+                username: userDict["username"]!,
+                coordinate: CLLocationCoordinate2D(latitude: Double(userDict["latitude"]!)!, longitude: Double(userDict["longitude"]!)!)
+            )
+            return friend
+        }
+    }
     private static func isFriendInRange(friend: Friend) -> Bool {
         let lat1 = me!.coordinate.latitude.degreesToRadians
         let lon1 = me!.coordinate.longitude.degreesToRadians

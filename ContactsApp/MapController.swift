@@ -56,9 +56,6 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         if isLoading == false {
             isLoading = true
-            DBManager.friends.forEach({ friend in friend.marker?.map = nil })
-            DBManager.me!.marker?.map = nil
-            DBManager.me!.range?.map = nil
             DBManager.removeMe()
             DBManager.updateMe(coordinate: coordinate)
             markUser(user: DBManager.me!, color: UIColor.black)
