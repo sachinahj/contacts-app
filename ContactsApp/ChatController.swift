@@ -39,7 +39,6 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
         print("ChatController: messagesUpdated", messages.count)
         self.tableView.reloadData()
         self.tableView.scrollToRow(at: IndexPath(row: DBManager.messages.count - 1, section: 0), at: .top, animated: true)
-
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

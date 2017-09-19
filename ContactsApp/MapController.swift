@@ -59,7 +59,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
             DBManager.removeMe()
             DBManager.updateMe(coordinate: coordinate)
             markUser(user: DBManager.me!, color: UIColor.black)
-            markRange(me: DBManager.me!, color: UIColor.black, completion: {_ in
+            markRange(me: DBManager.me!, color: UIColor.black, completion: {
                 self.isLoading = false
                 self.updateChatCount()
                 DBManager.observe()
@@ -83,7 +83,7 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
         chatButton.title = "Chat (\(DBManager.friends.count)) >"
     }
     
-    func chatButtonPressed(sender: UIButton!) {
+    @objc func chatButtonPressed(sender: UIButton!) {
         performSegue(withIdentifier: "goToChat", sender: self)
     }
     
@@ -104,7 +104,6 @@ class MapController: UIViewController, GMSMapViewDelegate, DBManagerDelegate {
     
     func animateMarker(coordinate: CLLocationCoordinate2D, timeline: [(Double, Double)], strokeColor: UIColor, fillColor: UIColor?, completion: @escaping (GMSCircle) -> Void) {
         var marker: GMSCircle?
-        
         for i in 0..<timeline.count {
             let delay = timeline[i].0
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
