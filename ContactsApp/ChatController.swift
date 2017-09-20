@@ -11,6 +11,8 @@ import SlackTextViewController
 
 class ChatController: SLKTextViewController, DBManagerDelegate {
     
+    var ARButton: UIBarButtonItem = UIBarButtonItem()
+    
     override var tableView: UITableView {
         get { return super.tableView! }
     }
@@ -28,7 +30,17 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 500.0
         self.tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: "MessageTableViewCell")
+        
+        ARButton.title = "AR >"
+        self.navigationItem.rightBarButtonItem = ARButton
+        ARButton.target = self
+        ARButton.action = #selector(ARButtonPressed)
+        
         DBManager.delegateChat = self
+    }
+    
+    @objc func ARButtonPressed(sender: UIButton!) {
+        performSegue(withIdentifier: "goToAR", sender: self)
     }
     
     func dbManager(friendsUpdated count: Int) {
@@ -75,6 +87,5 @@ class ChatController: SLKTextViewController, DBManagerDelegate {
     
     deinit {
         print("ChatController: deinit")
-    }
-    
+    }    
 }

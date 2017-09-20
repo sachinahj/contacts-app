@@ -18,6 +18,8 @@ class SplashController: UIViewController {
         self.title = "Enter a Username"
         jumpInButton.layer.cornerRadius = 10.0
         jumpInButton.clipsToBounds = true
+        
+        usernameTextField.text = "Sachin"
     }
     
     @IBAction func usernameTextFieldOnChange(_ sender: UITextField) {
