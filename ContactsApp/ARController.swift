@@ -18,13 +18,13 @@ class ARController: UIViewController {
         sceneLocationView.run()
         view.addSubview(sceneLocationView)
         
-        let coordinate = CLLocationCoordinate2D(latitude: 34.034967174685, longitude: -118.470092006028)
-        let location = CLLocation(coordinate: coordinate, altitude: 50)
-        let image = UIImage(named: "pin")!
-        let annotationNode = LocationAnnotationNode(location: location, image: image)
-        annotationNode.scaleRelativeToDistance = false
-        
-        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+        DBManager.friends.forEach {friend in
+            let location = CLLocation(coordinate: friend.coordinate, altitude: 50)
+            let image = UIImage(named: "pin")!
+            let annotationNode = LocationAnnotationNode(location: location, image: image)
+            annotationNode.scaleRelativeToDistance = false
+            sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -34,5 +34,6 @@ class ARController: UIViewController {
     
     deinit {
         print("ARController: deinit")
+        sceneLocationView.pause()
     }
 }

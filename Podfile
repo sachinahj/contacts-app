@@ -13,5 +13,6 @@ target 'ContactsApp' do
   pod 'Firebase/Database'
   pod 'SlackTextViewController'
   pod 'SlackTextViewController'
+  pod 'SnapKit'
 
 end
